@@ -1,9 +1,11 @@
 ﻿using Data;
+using Discord;
 using Discord.Commands;
 using Globals.Util;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,47 +32,11 @@ namespace Globals.Global
                 var cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = Context.Guild.Id;
 
-                var reader = await cmd.ExecuteReaderAsync();
+                DbDataReader reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
                     // TODO: Add all other channels
-
-                    var GamingEnabled = reader.GetInt32(12);
-                    var GamingId = (ulong)reader.GetInt64(2);
-
-                    var MusicEnabled = reader.GetInt32(13);
-                    var MusicId = (ulong)reader.GetInt64(4);
-
-                    var MovieEnabled = reader.GetInt32(14);
-                    var MovieId = (ulong)reader.GetInt64(3);
-
-
-                    if (GamingEnabled == 1)
-                    {
-                        if (GamingId == Context.Channel.Id)
-                        {
-                            message_channel = References.GamingChannel;
-                            break;
-                        }
-                    }
-
-                    if (MusicEnabled == 1)
-                    {
-                        if (MusicId.Equals(Context.Channel.Id))
-                        {
-                            message_channel = References.MusicChannel;
-                            break;
-                        }
-                    }
-
-                    if (MovieEnabled == 1)
-                    {
-                        if (MovieId.Equals(Context.Channel.Id))
-                        {
-                            message_channel = References.MovieChannel;
-                            break;
-                        }
-                    }
+                    if (message_channel.Equals("")) CheckChannel(ref message_channel, Context, reader);
                 }
 
                 cmd.Dispose();
@@ -95,14 +61,257 @@ namespace Globals.Global
                     {
                         Console.WriteLine(e.Message);
                     }
+                }
 
-                    // TODO: Post the message on all servers
+                // Post the messages everywhere
+                await Context.Message.DeleteAsync();
 
+                var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+                embed.WithAuthor(user_name, user_image);
+                embed.WithDescription(message_text);
+                embed.WithFooter(user_server + " - " + message_footer);
+
+                query = "SELECT * FROM server_configs;";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                reader = await cmd.ExecuteReaderAsync();
+
+                while(await reader.ReadAsync())
+                {
+                    // TODO: Add all other channels
+                    await PostMessageAsync(message_channel, reader, embed);
                 }
 
                 dbCon.Close();
             }
             else Console.WriteLine("Couldnt connect...");
+
+        }
+
+        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed)
+        {
+            if (message_channel.Equals(References.GamingChannel))
+            {
+                var Enabled = reader.GetInt32(12);
+                var Id = (ulong)reader.GetInt64(2);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.MusicChannel))
+            {
+                var Enabled = reader.GetInt32(13);
+                var Id = (ulong)reader.GetInt64(3);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.MovieChannel))
+            {
+                var Enabled = reader.GetInt32(14);
+                var Id = (ulong)reader.GetInt64(4);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.R6Channel))
+            {
+                var Enabled = reader.GetInt32(15);
+                var Id = (ulong)reader.GetInt64(5);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.LeagueChannel))
+            {
+                var Enabled = reader.GetInt32(16);
+                var Id = (ulong)reader.GetInt64(6);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.RustChannel))
+            {
+                var Enabled = reader.GetInt32(17);
+                var Id = (ulong)reader.GetInt64(7);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.GtaChannel))
+            {
+                var Enabled = reader.GetInt32(18);
+                var Id = (ulong)reader.GetInt64(8);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.PubgChannel))
+            {
+                var Enabled = reader.GetInt32(19);
+                var Id = (ulong)reader.GetInt64(9);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.FortniteChannel))
+            {
+                var Enabled = reader.GetInt32(20);
+                var Id = (ulong)reader.GetInt64(10);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+            else if (message_channel.Equals(References.ApexChannel))
+            {
+                var Enabled = reader.GetInt32(21);
+                var Id = (ulong)reader.GetInt64(11);
+
+                if (Enabled == 1)
+                {
+                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                    var channel = guild.GetChannel(Id);
+                    await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                }
+            }
+        }
+
+        private static void CheckChannel(ref string message_channel, ICommandContext Context, DbDataReader reader)
+        {
+            var GamingEnabled = reader.GetInt32(12);
+            var GamingId = (ulong)reader.GetInt64(2);
+            if (GamingEnabled == 1)
+            {
+                if (GamingId == Context.Channel.Id)
+                {
+                    message_channel = References.GamingChannel;
+                }
+            }
+
+            var MusicEnabled = reader.GetInt32(13);
+            var MusicId = (ulong)reader.GetInt64(3);
+            if (MusicEnabled == 1)
+            {
+                if (MusicId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.MusicChannel;
+                }
+            }
+
+            var MovieEnabled = reader.GetInt32(14);
+            var MovieId = (ulong)reader.GetInt64(4);
+            if (MovieEnabled == 1)
+            {
+                if (MovieId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.MovieChannel;
+                }
+            }
+
+            var R6Enabled = reader.GetInt32(15);
+            var R6Id = (ulong)reader.GetInt64(5);
+            if (R6Enabled == 1)
+            {
+                if (R6Id.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.R6Channel;
+                }
+            }
+
+            var LeagueEnabled = reader.GetInt32(16);
+            var LeagueId = (ulong)reader.GetInt64(6);
+            if (LeagueEnabled == 1)
+            {
+                if (LeagueId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.LeagueChannel;
+                }
+            }
+
+            var RustEnabled = reader.GetInt32(17);
+            var RustId = (ulong)reader.GetInt64(7);
+            if (RustEnabled == 1)
+            {
+                if (RustId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.RustChannel;
+                }
+            }
+
+            var GtaEnabled = reader.GetInt32(18);
+            var GtaId = (ulong)reader.GetInt64(8);
+            if (GtaEnabled == 1)
+            {
+                if (GtaId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.GtaChannel;
+                }
+            }
+
+            var PubgEnabled = reader.GetInt32(19);
+            var PubgId = (ulong)reader.GetInt64(9);
+            if (PubgEnabled == 1)
+            {
+                if (PubgId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.PubgChannel;
+                }
+            }
+
+            var FortniteEnabled = reader.GetInt32(20);
+            var FortniteId = (ulong)reader.GetInt64(10);
+            if (FortniteEnabled == 1)
+            {
+                if (FortniteId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.FortniteChannel;
+                }
+            }
+
+            var ApexEnabled = reader.GetInt32(21);
+            var ApexId = (ulong)reader.GetInt64(11);
+            if (ApexEnabled == 1)
+            {
+                if (ApexId.Equals(Context.Channel.Id))
+                {
+                    message_channel = References.R6Channel;
+                }
+            }
         }
     }
 }

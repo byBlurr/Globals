@@ -74,5 +74,10 @@ namespace Globals
         }
 
         public async Task ConfigureAsync() { await commands.AddModulesAsync(Assembly.GetEntryAssembly(), map); }
+
+        public static DiscordSocketClient GetBot()
+        {
+            return bot;
+        }
     }
 }
