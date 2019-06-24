@@ -38,7 +38,7 @@ namespace Globals.CommandModules
             else if (channel.ToLower().Equals("apex")) await ServerConfig.ToggleChannel(Context.Guild.Id, "apex", toggle);
 
             string GamingState = "Disabled", MusicState = "Disabled", MoviesState = "Disabled", R6State = "Disabled", LeagueState = "Disabled", RustState = "Disabled", GtaState = "Disabled", PubgState = "Disabled", FortniteState = "Disabled", ApexState = "Disabled";
-            ServerConfig.GetChannelSettings(Context.Guild.Id, ref GamingState, ref MusicState, ref MoviesState, ref R6State, ref LeagueState, ref RustState, ref GtaState, ref PubgState, ref FortniteState, ref ApexState);
+            ServerConfig.GetChannelSettingsAsText(Context.Guild.Id, ref GamingState, ref MusicState, ref MoviesState, ref R6State, ref LeagueState, ref RustState, ref GtaState, ref PubgState, ref FortniteState, ref ApexState);
 
             var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
             embed.WithDescription("Enable/Disable channels using `!enable <channel> <true/false>`, for example `!enable rainbow6 true`.\nOnce the correct channels are set, use the command `!create` next.");
@@ -64,7 +64,86 @@ namespace Globals.CommandModules
             await Context.Message.DeleteAsync();
 
             // Create globals category
+            var cat = await Context.Guild.CreateCategoryAsync("Globals");
+
             // Create all channels
+            bool GamingState = false, MusicState = false, MoviesState = false, R6State = false, LeagueState = false, RustState = false, GtaState = false, PubgState = false, FortniteState = false, ApexState = false;
+            ulong GamingId = 0, MusicId = 0, MoviesId = 0, R6Id = 0, LeagueId = 0, RustId = 0, GtaId = 0, PubgId = 0, FortniteId = 0, ApexId = 0;
+            ServerConfig.GetChannelSettingsAsBool(Context.Guild.Id, ref GamingState, ref MusicState, ref MoviesState, ref R6State, ref LeagueState, ref RustState, ref GtaState, ref PubgState, ref FortniteState, ref ApexState);
+
+            if (GamingState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Gaming");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                GamingId = chan.Id;
+            }
+
+            if (MusicState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Music");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                MusicId = chan.Id;
+            }
+
+            if (MoviesState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Movies");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                MoviesId = chan.Id;
+            }
+
+            if (R6State == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Rainbow Six");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                R6Id = chan.Id;
+            }
+
+            if (LeagueState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("League of Legends");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                LeagueId = chan.Id;
+            }
+
+            if (RustState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Rust");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                RustId = chan.Id;
+            }
+
+            if (GtaState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("GTA");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                GtaId = chan.Id;
+            }
+
+            if (PubgState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("PUBG");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                PubgId = chan.Id;
+            }
+
+            if (FortniteState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Fortnite");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                FortniteId = chan.Id;
+            }
+
+            if (ApexState == true)
+            {
+                var chan = await Context.Guild.CreateTextChannelAsync("Apex");
+                await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                ApexId = chan.Id;
+            }
+
+            await ServerConfig.SetupChannels(Context.Guild.Id, GamingId, MusicId, MoviesId, R6Id, LeagueId, RustId, GtaId, PubgId, FortniteId, ApexId);
+
+            await Context.Channel.SendMessageAsync("Setup completed, use the command `!help` to modify your settings in the future.");
         }
     }
 }
