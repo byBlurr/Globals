@@ -32,7 +32,7 @@ namespace Globals.Data
             return isFound;
         }
 
-        public static async Task RegisterServer(ulong serverid)
+        public static async Task RegisterServerAsync(ulong serverid)
         {
             var dbCon = DBConnection.Instance();
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
@@ -65,7 +65,7 @@ namespace Globals.Data
             }
         }
 
-        public static async Task UnregisterServer(ulong serverid)
+        public static async Task UnregisterServerAsync(ulong serverid)
         {
             var dbCon = DBConnection.Instance();
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;

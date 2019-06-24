@@ -7,6 +7,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Globals.Data;
+using Globals.Global;
 
 namespace Globals
 {
@@ -33,12 +34,12 @@ namespace Globals
 
         private async Task HandleJoinGuildAsync(SocketGuild guild)
         {
-            await ServerConfig.RegisterServer(guild.Id);
+            await ServerConfig.RegisterServerAsync(guild.Id);
         }
 
         private async Task HandleLeftGuildAsync(SocketGuild guild)
         {
-            await ServerConfig.UnregisterServer(guild.Id);
+            await ServerConfig.UnregisterServerAsync(guild.Id);
         }
 
         private async Task HandleGlobalMessageAsync(SocketMessage pMsg)
@@ -48,7 +49,7 @@ namespace Globals
             var context = new SocketCommandContext(bot, message);
             if (message.Author.IsBot) return;
 
-            
+            await Message.PostGlobalMessageAsync(context);
         }
 
         private async Task HandleCommandAsync(SocketMessage pMsg)
