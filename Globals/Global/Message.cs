@@ -56,6 +56,7 @@ namespace Globals.Global
                     try
                     {
                         await cmd.ExecuteNonQueryAsync();
+                        await Context.Message.DeleteAsync();
                     }
                     catch (Exception e)
                     {
@@ -64,21 +65,22 @@ namespace Globals.Global
                 }
 
                 // Post the messages everywhere
-                await Context.Message.DeleteAsync();
-
-                var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
-                embed.WithAuthor(user_name, user_image);
-                embed.WithDescription(message_text);
-                embed.WithFooter(user_server + " - " + message_footer);
-
-                query = "SELECT * FROM server_configs;";
-                cmd = new MySqlCommand(query, dbCon.Connection);
-                reader = await cmd.ExecuteReaderAsync();
-
-                while(await reader.ReadAsync())
+                if (!message_channel.Equals(""))
                 {
-                    // TODO: Add all other channels
-                    await PostMessageAsync(message_channel, reader, embed);
+                    var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+                    embed.WithAuthor(user_name, user_image);
+                    embed.WithDescription(message_text);
+                    embed.WithFooter(user_server + " - " + message_footer);
+
+                    query = "SELECT * FROM server_configs;";
+                    cmd = new MySqlCommand(query, dbCon.Connection);
+                    reader = await cmd.ExecuteReaderAsync();
+
+                    while (await reader.ReadAsync())
+                    {
+                        // TODO: Add all other channels
+                        await PostMessageAsync(message_channel, reader, embed);
+                    }
                 }
 
                 dbCon.Close();
