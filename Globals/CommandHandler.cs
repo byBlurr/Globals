@@ -33,12 +33,12 @@ namespace Globals
 
         private async Task HandleJoinGuildAsync(SocketGuild guild)
         {
-            ServerConfig.RegisterServer(guild.Id);
+            await ServerConfig.RegisterServer(guild.Id);
         }
 
         private async Task HandleLeftGuildAsync(SocketGuild guild)
         {
-            ServerConfig.UnregisterServer(guild.Id);
+            await ServerConfig.UnregisterServer(guild.Id);
         }
 
         private async Task HandleGlobalMessageAsync(SocketMessage pMsg)

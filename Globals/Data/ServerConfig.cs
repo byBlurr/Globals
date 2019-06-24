@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Globals.Data
 {
@@ -31,7 +32,7 @@ namespace Globals.Data
             return isFound;
         }
 
-        public static void RegisterServer(ulong serverid)
+        public static async Task RegisterServer(ulong serverid)
         {
             var dbCon = DBConnection.Instance();
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
@@ -41,7 +42,7 @@ namespace Globals.Data
                 string query = "SELECT * FROM server_configs WHERE server_id = @serverid";
                 var cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = serverid;
-                var reader = cmd.ExecuteReader();
+                var reader = await cmd.ExecuteReaderAsync();
                 cmd.Dispose();
 
                 if (!reader.HasRows)
@@ -52,7 +53,7 @@ namespace Globals.Data
 
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                     catch (Exception e)
                     {
@@ -64,7 +65,7 @@ namespace Globals.Data
             }
         }
 
-        public static void UnregisterServer(ulong serverid)
+        public static async Task UnregisterServer(ulong serverid)
         {
             var dbCon = DBConnection.Instance();
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
@@ -77,7 +78,7 @@ namespace Globals.Data
 
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    await cmd.ExecuteNonQueryAsync();
                 }
                 catch (Exception e)
                 {
