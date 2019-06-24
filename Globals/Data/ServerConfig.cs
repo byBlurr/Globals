@@ -128,17 +128,18 @@ namespace Globals.Data
                 var cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = serverid;
                 var reader = await cmd.ExecuteReaderAsync();
-                cmd.Dispose();
 
-                if (!reader.HasRows)
+                if (reader.HasRows.Equals(false))
                 {
+                    cmd.Dispose();
                     query = "INSERT INTO server_configs (server_id) VALUES(@serverid);";
                     cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.Parameters.Add("@serverid", MySqlDbType.Text).Value = serverid;
 
                     try
                     {
-                        await cmd.ExecuteNonQueryAsync();
+                        //await cmd.ExecuteNonQueryAsync();
+                        Console.WriteLine("New server added to the database.");
                     }
                     catch (Exception e)
                     {
@@ -185,10 +186,10 @@ namespace Globals.Data
                 var cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = serverid;
                 var reader = await cmd.ExecuteReaderAsync();
-                cmd.Dispose();
 
                 if (!reader.HasRows)
                 {
+                    cmd.Dispose();
                     query = "UPDATE server_configs SET channel_gaming = @channel_gaming, channel_music = @channel_music, channel_movies = @channel_movies, channel_rainbowsix = @channel_rainbowsix, channel_league = @channel_league, channel_rust = @channel_rust, channel_gta = @channel_gta, channel_pubg = @channel_pubg, channel_fortnite = @channel_fortnite, channel_apex = @channel_apex WHERE server_id = @serverid";
                     //query = "UPDATE server_configs SET channel_gaming = @channel_gaming, channel_music = @channel_music WHERE server_id = @serverid";
                     cmd = new MySqlCommand(query, dbCon.Connection);
