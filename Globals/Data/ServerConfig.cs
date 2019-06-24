@@ -138,8 +138,8 @@ namespace Globals.Data
 
                     try
                     {
-                        //await cmd.ExecuteNonQueryAsync();
-                        Console.WriteLine("New server added to the database.");
+                        await cmd.ExecuteNonQueryAsync();
+                        Console.WriteLine("New server added to the database. YAY!");
                     }
                     catch (Exception e)
                     {
