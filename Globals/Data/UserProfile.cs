@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Globals.Data
 {
@@ -11,24 +12,50 @@ namespace Globals.Data
         /// <summary>
         /// Check if the user already has a profile.
         /// </summary>
-        public static bool CheckUser(ulong userid)
+        public static async Task CheckUser(ulong userid, DBConnection dbCon)
         {
-            var dbCon = DBConnection.Instance();
-            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
-            bool isFound = false;
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
 
-            if (dbCon.IsConnect())
+            var reader = cmd.ExecuteReader();
+
+            if (!reader.HasRows)
             {
-                string query = "SELECT * FROM user_profiles WHERE user_id = @userid";
-                var cmd = new MySqlCommand(query, dbCon.Connection);
-                cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                cmd.Dispose();
+                query = "INSERT INTO user_profiles (user_id, server_count) VALUES(@userid, @servercount);";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@userid", MySqlDbType.Int64).Value = userid;
+                cmd.Parameters.Add("@servercount", MySqlDbType.Int32).Value = 1;
 
-                var reader = cmd.ExecuteReader();
-                isFound = reader.HasRows;
-                dbCon.Close();
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
 
-            return isFound;
+        }
+
+        public static async Task<string> GetUserRankAsync(ulong userid, DBConnection dbCon)
+        {
+            string user_rank = "User";
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                if (reader.GetInt32(2) == 1) user_rank = "Global Moderator";
+                else if (reader.GetInt32(1) == 1) user_rank = "Globals Founder";
+                else if (reader.GetInt32(3) == 1) user_rank = "Blacklisted";
+            }
+            return user_rank;
         }
     }
 }

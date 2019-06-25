@@ -1,6 +1,7 @@
 ﻿using Data;
 using Discord;
 using Discord.Commands;
+using Globals.Data;
 using Globals.Util;
 using MySql.Data.MySqlClient;
 using System;
@@ -17,6 +18,7 @@ namespace Globals.Global
         {
             ulong user_id = Context.User.Id;
             string user_name = Context.User.Username;
+            string user_rank = "";
             string user_server = Context.Guild.Name;
             string user_image = Context.User.GetAvatarUrl();
 
@@ -28,6 +30,7 @@ namespace Globals.Global
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
             if (dbCon.IsConnect())
             {
+                // Get the channel
                 string query = "SELECT * FROM server_configs WHERE server_id = @serverid";
                 var cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = Context.Guild.Id;
@@ -35,13 +38,19 @@ namespace Globals.Global
                 DbDataReader reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    // TODO: Add all other channels
                     if (message_channel.Equals("")) CheckChannel(ref message_channel, Context, reader);
                 }
 
-                cmd.Dispose();
                 if (!message_channel.Equals(""))
                 {
+                    // Check the user exists
+                    await UserProfile.CheckUser(Context.User.Id, dbCon);
+
+                    // Check user rank
+                    user_rank = await UserProfile.GetUserRankAsync(Context.User.Id, dbCon);
+
+                    // Save the message in the db
+                    cmd.Dispose();
                     query = "INSERT INTO global_messages (user_id, user_name, user_server, user_image, message_text, message_channel, message_footer) " +
                         "VALUES(@user_id, @user_name, @user_server, @user_image, @message_text, @message_channel, @message_footer);";
                     cmd = new MySqlCommand(query, dbCon.Connection);
@@ -68,9 +77,11 @@ namespace Globals.Global
                 if (!message_channel.Equals(""))
                 {
                     var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
-                    embed.WithAuthor(user_name, user_image);
+                    //embed.WithAuthor(user_name, user_image);
+                    embed.WithTitle(user_name + " - " + user_server);
+                    embed.WithThumbnailUrl(user_image);
                     embed.WithDescription(message_text);
-                    embed.WithFooter(user_server + " - " + message_footer);
+                    embed.WithFooter(user_rank + " - " + message_footer);
 
                     query = "SELECT * FROM server_configs;";
                     cmd = new MySqlCommand(query, dbCon.Connection);
@@ -78,8 +89,10 @@ namespace Globals.Global
 
                     while (await reader.ReadAsync())
                     {
-                        // TODO: Add all other channels
-                        await PostMessageAsync(message_channel, reader, embed);
+                        if (!user_rank.ToLower().Equals("blacklisted"))
+                        {
+                            await PostMessageAsync(message_channel, reader, embed);
+                        }
                     }
                 }
 
