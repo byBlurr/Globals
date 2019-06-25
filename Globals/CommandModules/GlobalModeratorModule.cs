@@ -2,6 +2,7 @@
 using Discord;
 using Discord.Commands;
 using Globals.Data;
+using Globals.Global;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,7 @@ namespace Globals.CommandModules
                     {
                         await Context.Message.DeleteAsync();
                         await UserProfile.AddWarningAsync(User, dbCon);
+                        await Message.DeleteAsync(User, dbCon);
                         await Context.User.SendMessageAsync("You warned " + User.Username + ".");
                     }
                     dbCon.Close();

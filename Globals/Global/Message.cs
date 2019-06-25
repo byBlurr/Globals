@@ -82,12 +82,45 @@ namespace Globals.Global
                             await PostMessageAsync(message_channel, reader, embed);
                         }
                     }
+
+                    reader.Close();
+                    cmd.Dispose();
                 }
 
                 dbCon.Close();
             }
             else Console.WriteLine("Couldnt connect...");
 
+        }
+
+        public static async Task DeleteAsync(IUser User, DBConnection dbCon)
+        {
+            string query = "SELECT * FROM server_configs;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (reader.Read())
+            {
+                if (reader.GetInt32(12) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
+                    var Messages = await Channel.GetMessagesAsync(20).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        foreach (IEmbed embed in message.Embeds)
+                        {
+                            if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                            {
+                                var emb = embed.ToEmbedBuilder().WithDescription("Message was removed...").Build();
+                                await (message as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                            }
+                        }
+                    }
+                }
+            }
+
+            cmd.Dispose();
+            reader.Close();
         }
 
         public static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)

@@ -35,11 +35,13 @@ namespace Globals
         private async Task HandleJoinGuildAsync(SocketGuild guild)
         {
             await ServerConfig.RegisterServerAsync(guild.Id);
+            await UpdateStatus();
         }
 
         private async Task HandleLeftGuildAsync(SocketGuild guild)
         {
             await ServerConfig.UnregisterServerAsync(guild.Id);
+            await UpdateStatus();
         }
 
         private async Task HandleCommandAsync(SocketMessage pMsg)
@@ -73,9 +75,14 @@ namespace Globals
 
         private async Task ReadyAsync()
         {
-            await bot.SetGameAsync(BotConfig.Load().BotStatus);
-            await bot.SetStatusAsync(UserStatus.Idle);
             await GlobalMessages.ClearData();
+            await UpdateStatus();
+        }
+
+        private async Task UpdateStatus()
+        {
+            await bot.SetGameAsync("Connecting " + bot.Guilds.Count + " communities.");
+            await bot.SetStatusAsync(UserStatus.Idle);
         }
 
         public async Task ConfigureAsync() { await commands.AddModulesAsync(Assembly.GetEntryAssembly(), map); }
