@@ -13,7 +13,7 @@ namespace Globals.Data
         /// <summary>
         /// Check if the user already has a profile.
         /// </summary>
-        public static async Task CheckUser(ulong userid, DBConnection dbCon)
+        public static async Task CheckUserAsync(ulong userid, DBConnection dbCon)
         {
             string query = "SELECT * FROM user_profiles WHERE user_id = @userid";
             var cmd = new MySqlCommand(query, dbCon.Connection);

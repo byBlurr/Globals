@@ -30,31 +30,20 @@ namespace Globals.Global
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
             if (dbCon.IsConnect())
             {
-                // Get the channel
-                string query = "SELECT * FROM server_configs WHERE server_id = @serverid";
-                var cmd = new MySqlCommand(query, dbCon.Connection);
-                cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = Context.Guild.Id;
-
-                DbDataReader reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    if (message_channel.Equals("")) CheckChannel(ref message_channel, Context, reader);
-                }
+                message_channel = await GetGlobalChannelInUseAsync(Context, dbCon);
 
                 if (!message_channel.Equals(""))
                 {
                     // Check the user exists
-                    cmd.Dispose();
-                    reader.Close();
-                    await UserProfile.CheckUser(Context.User.Id, dbCon);
+                    await UserProfile.CheckUserAsync(Context.User.Id, dbCon);
 
                     // Check user rank
                     user_rank = await UserProfile.GetUserRankAsync(Context.User.Id, dbCon);
 
                     // Save the message in the db
-                    query = "INSERT INTO global_messages (user_id, user_name, user_server, user_image, message_text, message_channel, message_footer) " +
+                    string query = "INSERT INTO global_messages (user_id, user_name, user_server, user_image, message_text, message_channel, message_footer) " +
                         "VALUES(@user_id, @user_name, @user_server, @user_image, @message_text, @message_channel, @message_footer);";
-                    cmd = new MySqlCommand(query, dbCon.Connection);
+                    var cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.Parameters.Add("@user_id", MySqlDbType.UInt64).Value = user_id;
                     cmd.Parameters.Add("@user_name", MySqlDbType.String).Value = user_name;
                     cmd.Parameters.Add("@user_server", MySqlDbType.String).Value = user_server;
@@ -82,9 +71,9 @@ namespace Globals.Global
                     embed.WithDescription(message_text);
                     embed.WithFooter(user_rank + " - " + message_footer);
 
-                    query = "SELECT * FROM server_configs;";
-                    cmd = new MySqlCommand(query, dbCon.Connection);
-                    reader = await cmd.ExecuteReaderAsync();
+                    string query = "SELECT * FROM server_configs;";
+                    var cmd = new MySqlCommand(query, dbCon.Connection);
+                    var reader = await cmd.ExecuteReaderAsync();
 
                     while (await reader.ReadAsync())
                     {
@@ -99,6 +88,24 @@ namespace Globals.Global
             }
             else Console.WriteLine("Couldnt connect...");
 
+        }
+
+        private static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
+        {
+            string message_channel = "";
+            string query = "SELECT * FROM server_configs WHERE server_id = @serverid";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = Context.Guild.Id;
+
+            DbDataReader reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                if (message_channel.Equals("")) CheckChannel(ref message_channel, Context, reader);
+            }
+
+            cmd.Dispose();
+            reader.Close();
+            return message_channel;
         }
 
         private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed)
