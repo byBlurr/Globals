@@ -17,13 +17,12 @@ namespace Globals.Data
             string query = "SELECT * FROM user_profiles WHERE user_id = @userid";
             var cmd = new MySqlCommand(query, dbCon.Connection);
             cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
-
-            var reader = cmd.ExecuteReader();
+            var reader = await cmd.ExecuteReaderAsync();
 
             if (!reader.HasRows)
             {
                 cmd.Dispose();
-                query = "INSERT INTO user_profiles (user_id, server_count) VALUES(@userid, @servercount);";
+                query = "INSERT INTO user_profiles (user_id, count_servers) VALUES(@userid, @servercount);";
                 cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@userid", MySqlDbType.Int64).Value = userid;
                 cmd.Parameters.Add("@servercount", MySqlDbType.Int32).Value = 1;
@@ -38,6 +37,8 @@ namespace Globals.Data
                 }
             }
 
+            cmd.Dispose();
+            reader.Close();
         }
 
         public static async Task<string> GetUserRankAsync(ulong userid, DBConnection dbCon)
@@ -51,10 +52,12 @@ namespace Globals.Data
 
             while (await reader.ReadAsync())
             {
-                if (reader.GetInt32(2) == 1) user_rank = "Global Moderator";
-                else if (reader.GetInt32(1) == 1) user_rank = "Globals Founder";
+                if (reader.GetInt32(1) == 1) user_rank = "Globals Founder";
+                else if (reader.GetInt32(2) == 1) user_rank = "Global Moderator";
                 else if (reader.GetInt32(3) == 1) user_rank = "Blacklisted";
             }
+            cmd.Dispose();
+            reader.Close();
             return user_rank;
         }
     }

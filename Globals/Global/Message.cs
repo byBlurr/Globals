@@ -44,13 +44,14 @@ namespace Globals.Global
                 if (!message_channel.Equals(""))
                 {
                     // Check the user exists
+                    cmd.Dispose();
+                    reader.Close();
                     await UserProfile.CheckUser(Context.User.Id, dbCon);
 
                     // Check user rank
                     user_rank = await UserProfile.GetUserRankAsync(Context.User.Id, dbCon);
 
                     // Save the message in the db
-                    cmd.Dispose();
                     query = "INSERT INTO global_messages (user_id, user_name, user_server, user_image, message_text, message_channel, message_footer) " +
                         "VALUES(@user_id, @user_name, @user_server, @user_image, @message_text, @message_channel, @message_footer);";
                     cmd = new MySqlCommand(query, dbCon.Connection);
