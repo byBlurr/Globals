@@ -78,9 +78,7 @@ namespace Globals.Global
                 if (!message_channel.Equals(""))
                 {
                     var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
-                    //embed.WithAuthor(user_name, user_image);
-                    embed.WithTitle(user_name + " - " + user_server);
-                    embed.WithThumbnailUrl(user_image);
+                    embed.WithAuthor(user_name + " from " + user_server, user_image);
                     embed.WithDescription(message_text);
                     embed.WithFooter(user_rank + " - " + message_footer);
 
