@@ -38,7 +38,7 @@ namespace Globals.Global
                     await UserProfile.CheckUserAsync(Context.User.Id, dbCon);
 
                     // Check user rank
-                    user_rank = await UserProfile.GetUserRankAsync(Context.User.Id, dbCon);
+                    user_rank = await UserProfile.GetGroupAsync(Context.User.Id, dbCon);
 
                     // Save the message in the db
                     string query = "INSERT INTO global_messages (user_id, user_name, user_server, user_image, message_text, message_channel, message_footer) " +
@@ -108,7 +108,7 @@ namespace Globals.Global
             return message_channel;
         }
 
-        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed)
+        public static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed)
         {
             if (message_channel.Equals(References.GamingChannel))
             {

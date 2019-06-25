@@ -188,7 +188,7 @@ namespace Globals.Data
             return CanMod;
         }
 
-        public static async Task<string> GetUserRankAsync(ulong userid, DBConnection dbCon)
+        public static async Task<string> GetGroupAsync(ulong userid, DBConnection dbCon)
         {
             string user_rank = "User";
 
@@ -206,6 +206,60 @@ namespace Globals.Data
             cmd.Dispose();
             reader.Close();
             return user_rank;
+        }
+
+        public static async Task<int> GetMessageCountAsync(ulong userid, DBConnection dbCon)
+        {
+            int count = 0;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                count = reader.GetInt32(5);
+            }
+            cmd.Dispose();
+            reader.Close();
+            return count;
+        }
+
+        public static async Task<int> GetServerCountAsync(ulong userid, DBConnection dbCon)
+        {
+            int count = 0;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                count = reader.GetInt32(4);
+            }
+            cmd.Dispose();
+            reader.Close();
+            return count;
+        }
+
+        public static async Task<int> GetWarningCountAsync(ulong userid, DBConnection dbCon)
+        {
+            int count = 0;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                count = reader.GetInt32(6);
+            }
+            cmd.Dispose();
+            reader.Close();
+            return count;
         }
     }
 }
