@@ -71,6 +71,7 @@ namespace Globals
         {
             await bot.SetGameAsync(BotConfig.Load().BotStatus);
             await bot.SetStatusAsync(UserStatus.Idle);
+            await GlobalMessages.ClearData();
         }
 
         public async Task ConfigureAsync() { await commands.AddModulesAsync(Assembly.GetEntryAssembly(), map); }
