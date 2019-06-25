@@ -27,7 +27,7 @@ namespace Globals
 
             bot.Ready += ReadyAsync;
             bot.MessageReceived += HandleCommandAsync;
-            bot.MessageReceived += HandleGlobalMessageAsync;
+            //bot.MessageReceived += HandleGlobalMessageAsync;
 
             commands = map.GetService<CommandService>();
         }
@@ -40,16 +40,6 @@ namespace Globals
         private async Task HandleLeftGuildAsync(SocketGuild guild)
         {
             await ServerConfig.UnregisterServerAsync(guild.Id);
-        }
-
-        private async Task HandleGlobalMessageAsync(SocketMessage pMsg)
-        {
-            SocketUserMessage message = pMsg as SocketUserMessage;
-            if (message == null) return;
-            var context = new SocketCommandContext(bot, message);
-            if (message.Author.IsBot) return;
-
-            await Message.PostGlobalMessageAsync(context);
         }
 
         private async Task HandleCommandAsync(SocketMessage pMsg)
@@ -65,6 +55,20 @@ namespace Globals
                 var result = await commands.ExecuteAsync(context, argPos, map);
                 if (!result.IsSuccess && result.ErrorReason != "Unknown command.") Console.WriteLine(result.ErrorReason);
             }
+            else
+            {
+                await HandleGlobalMessageAsync(pMsg);
+            }
+        }
+
+        private async Task HandleGlobalMessageAsync(SocketMessage pMsg)
+        {
+            SocketUserMessage message = pMsg as SocketUserMessage;
+            if (message == null) return;
+            var context = new SocketCommandContext(bot, message);
+            if (message.Author.IsBot) return;
+
+            await Message.PostGlobalMessageAsync(context);
         }
 
         private async Task ReadyAsync()

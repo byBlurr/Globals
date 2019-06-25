@@ -27,6 +27,8 @@ namespace Globals.CommandModules
 
                     if (!ChannelInUse.Equals(""))
                     {
+                        await Context.Message.DeleteAsync();
+
                         var Channel = CommandHandler.GetBot().GetGuild(References.GlobalsServerId).GetChannel(References.RequestChannelId) as IMessageChannel;
 
                         var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
@@ -53,6 +55,8 @@ namespace Globals.CommandModules
 
                     if (!ChannelInUse.Equals(""))
                     {
+                        await Context.Message.DeleteAsync();
+
                         ulong userid = User.Id;
                         int scount = await UserProfile.GetServerCountAsync(userid, dbCon);
                         int mcount = await UserProfile.GetMessageCountAsync(userid, dbCon);
