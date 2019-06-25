@@ -100,6 +100,74 @@ namespace Globals.Data
             reader.Close();
         }
 
+        public static async Task UnBanUserAsync(IUser User, DBConnection dbCon)
+        {
+            ulong userid = User.Id;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                // Blacklist them
+                cmd.Dispose();
+                reader.Close();
+                await User.SendMessageAsync("A global chat moderator has removed a warning from you.");
+                query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = 0;
+                cmd.Parameters.Add("@blacklisted", MySqlDbType.UInt32).Value = 0;
+
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            cmd.Dispose();
+            reader.Close();
+        }
+
+        public static async Task RemoveWarningAsync(IUser User, DBConnection dbCon, int warnToRemove)
+        {
+            ulong userid = User.Id;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                    // Blacklist them
+                    cmd.Dispose();
+                    reader.Close();
+                    await User.SendMessageAsync("A global chat moderator has removed a warning from you.");
+                    query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
+                    cmd = new MySqlCommand(query, dbCon.Connection);
+                    cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                    cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = warnToRemove;
+                    cmd.Parameters.Add("@blacklisted", MySqlDbType.UInt32).Value = 0;
+
+                    try
+                    {
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+            }
+            cmd.Dispose();
+            reader.Close();
+        }
+
         public static bool CanModerate(ulong userid, DBConnection dbCon)
         {
             bool CanMod = false;
