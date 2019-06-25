@@ -90,7 +90,7 @@ namespace Globals.Global
 
         }
 
-        private static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
+        public static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
         {
             string message_channel = "";
             string query = "SELECT * FROM server_configs WHERE server_id = @serverid";

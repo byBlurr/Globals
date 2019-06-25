@@ -16,5 +16,8 @@ namespace Globals.Util
         public static string PubgChannel = "pubg";
         public static string FortniteChannel = "fort";
         public static string ApexChannel = "apex";
+
+        public static ulong GlobalsServerId = 591710248360738863;
+        public static ulong RequestChannelId = 593087682771419146;
     }
 }
