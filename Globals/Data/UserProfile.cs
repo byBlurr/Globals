@@ -1,4 +1,5 @@
 ﻿using Data;
+using Discord;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,84 @@ namespace Globals.Data
 
             cmd.Dispose();
             reader.Close();
+        }
+
+        public static async Task AddWarningAsync(IUser User, DBConnection dbCon, bool ban = false)
+        {
+            ulong userid = User.Id;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                int warnings = reader.GetInt32(6);
+                if (warnings <= 2 && ban == false)
+                {
+                    // Warn them
+                    cmd.Dispose();
+                    reader.Close();
+                    await User.SendMessageAsync("A global chat moderator has warned you for your actions. Please keep the chat mature!");
+                    query = "UPDATE user_profiles SET count_warnings = @count_warnings WHERE user_id = @userid";
+                    cmd = new MySqlCommand(query, dbCon.Connection);
+                    cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                    cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = (warnings + 1);
+
+                    try
+                    {
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else
+                {
+                    // Blacklist them
+                    cmd.Dispose();
+                    reader.Close();
+                    await User.SendMessageAsync("A global chat moderator has warned you for your actions. You have been blacklisted!");
+                    query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
+                    cmd = new MySqlCommand(query, dbCon.Connection);
+                    cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                    cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = 3;
+                    cmd.Parameters.Add("@blacklisted", MySqlDbType.UInt32).Value = 1;
+
+                    try
+                    {
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+            cmd.Dispose();
+            reader.Close();
+        }
+
+        public static bool CanModerate(ulong userid, DBConnection dbCon)
+        {
+            bool CanMod = false;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                if (reader.GetInt32(1) == 1) CanMod = true;
+                else if (reader.GetInt32(2) == 1) CanMod = true;
+            }
+            cmd.Dispose();
+            reader.Close();
+
+            return CanMod;
         }
 
         public static async Task<string> GetUserRankAsync(ulong userid, DBConnection dbCon)

@@ -26,8 +26,8 @@ namespace Globals
             bot.LeftGuild += HandleLeftGuildAsync;
 
             bot.Ready += ReadyAsync;
-            bot.MessageReceived += HandleGlobalMessageAsync;
             bot.MessageReceived += HandleCommandAsync;
+            bot.MessageReceived += HandleGlobalMessageAsync;
 
             commands = map.GetService<CommandService>();
         }
