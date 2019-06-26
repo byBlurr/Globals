@@ -113,7 +113,6 @@ namespace Globals.Data
 
             while (await reader.ReadAsync())
             {
-                // Blacklist them
                 cmd.Dispose();
                 reader.Close();
                 await User.SendMessageAsync("A global chat moderator has removed a warning from you.");
@@ -125,6 +124,7 @@ namespace Globals.Data
 
                 try
                 {
+                    Console.WriteLine(User.Username + " was removed from the blacklist.");
                     await cmd.ExecuteNonQueryAsync();
                 }
                 catch (Exception e)
@@ -147,24 +147,24 @@ namespace Globals.Data
 
             while (await reader.ReadAsync())
             {
-                    // Blacklist them
-                    cmd.Dispose();
-                    reader.Close();
-                    await User.SendMessageAsync("A global chat moderator has removed a warning from you.");
-                    query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
-                    cmd = new MySqlCommand(query, dbCon.Connection);
-                    cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
-                    cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = warnToRemove;
-                    cmd.Parameters.Add("@blacklisted", MySqlDbType.UInt32).Value = 0;
+                cmd.Dispose();
+                reader.Close();
+                await User.SendMessageAsync("A global chat moderator has removed a warning from you.");
+                query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = warnToRemove;
+                cmd.Parameters.Add("@blacklisted", MySqlDbType.UInt32).Value = 0;
 
-                    try
-                    {
-                        await cmd.ExecuteNonQueryAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
+                try
+                {
+                    Console.WriteLine(User.Username + " has had " + warnToRemove + " warnings removed.");
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
             cmd.Dispose();
             reader.Close();
@@ -179,10 +179,11 @@ namespace Globals.Data
             cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
             var reader = cmd.ExecuteReader();
 
-            while (reader.Read())
+            while (reader.Read() && CanMod == false)
             {
                 if (reader.GetInt32(1) == 1) CanMod = true;
                 else if (reader.GetInt32(2) == 1) CanMod = true;
+                else CanMod = false;
             }
             cmd.Dispose();
             reader.Close();

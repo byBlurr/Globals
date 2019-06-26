@@ -104,7 +104,7 @@ namespace Globals.Global
                 if (reader.GetInt32(12) == 1)
                 {
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
-                    var Messages = await Channel.GetMessagesAsync(20).FlattenAsync();
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
                     foreach (IMessage message in Messages)
                     {
                         if (message != null)
