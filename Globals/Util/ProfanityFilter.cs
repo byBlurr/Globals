@@ -17,9 +17,9 @@ namespace Globals.Util
         public static bool HasProfanity(string text)
         {
             text = text.ToLower();
-            for (int i = 0; i <= FileteredWords.Length; i++)
+            foreach (string filteredWord in FileteredWords)
             {
-                if (text.Contains(FileteredWords[i]))
+                if (text.Contains(filteredWord))
                 {
                     return true;
                 }
