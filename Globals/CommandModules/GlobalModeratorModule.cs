@@ -28,6 +28,7 @@ namespace Globals.CommandModules
                         await UserProfile.AddWarningAsync(User, dbCon);
                         await Context.User.SendMessageAsync("You warned " + User.Username + ".");
                     }
+                    dbCon.Close();
                 }
             }
         }
@@ -49,6 +50,7 @@ namespace Globals.CommandModules
                         await UserProfile.AddWarningAsync(User, dbCon, true);
                         await Context.User.SendMessageAsync("You blacklisted " + User.Username + ".");
                     }
+                    dbCon.Close();
                 }
             }
         }

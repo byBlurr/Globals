@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Globals.Data;
 using Globals.Global;
+using Globals.Util;
+using Data;
 
 namespace Globals
 {
@@ -59,7 +61,22 @@ namespace Globals
             }
             else
             {
-                await HandleGlobalMessageAsync(pMsg);
+                if (!ProfanityFilter.HasProfanity(pMsg.Content.ToString()))
+                {
+                    await HandleGlobalMessageAsync(pMsg);
+                }
+                else
+                {
+                    var dbCon = DBConnection.Instance();
+                    dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+                    if (dbCon.IsConnect())
+                    {
+                        await pMsg.DeleteAsync();
+                        await Message.DeleteAsync(pMsg.Author, dbCon);
+                        await UserProfile.AddWarningAsync(pMsg.Author, dbCon);
+                        dbCon.Close();
+                    }
+                }
             }
         }
 
