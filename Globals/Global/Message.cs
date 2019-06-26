@@ -95,40 +95,7 @@ namespace Globals.Global
 
         public static async Task DeleteAsync(IUser User, DBConnection dbCon)
         {
-            List<IMessage> MessagesToRemove = new List<IMessage>();
-
-            string query = "SELECT * FROM server_configs;";
-            var cmd = new MySqlCommand(query, dbCon.Connection);
-            var reader = await cmd.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
-            {
-                // Gaming Channel
-                if (reader.GetInt32(12) == 1)
-                {
-                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
-                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                    foreach (IMessage message in Messages)
-                    {
-                        if (message != null)
-                        {
-                            foreach (IEmbed embed in message.Embeds)
-                            {
-                                if (embed.Footer.HasValue)
-                                {
-                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
-                                    {
-                                        MessagesToRemove.Add(message);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            reader.Close();
-            cmd.Dispose();
+            List<IMessage> MessagesToRemove = await GetMessagesByUser(User, dbCon);
 
             var remove = Task.Run(async () =>
             {
@@ -138,7 +105,7 @@ namespace Globals.Global
                     {
                         var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
                         await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb);
-                        await Task.Delay(1000);
+                        await Task.Delay(1100);
                     }
                 }
             });
@@ -387,6 +354,233 @@ namespace Globals.Global
                     message_channel = References.R6Channel;
                 }
             }
+        }
+
+        private static async Task<List<IMessage>> GetMessagesByUser(IUser User, DBConnection dbCon)
+        {
+            List<IMessage> MessagesByUser = new List<IMessage>();
+            string query = "SELECT * FROM server_configs;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                // Gaming Channel
+                if (reader.GetInt32(12) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(13) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(3));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(14) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(4));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(15) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(5));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(16) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(6));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(17) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(7));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(18) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(8));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(19) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(9));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(20) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(10));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (reader.GetInt32(21) == 1)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(11));
+                    var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                    foreach (IMessage message in Messages)
+                    {
+                        if (message != null)
+                        {
+                            foreach (IEmbed embed in message.Embeds)
+                            {
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        MessagesByUser.Add(message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            reader.Close();
+            cmd.Dispose();
+            return MessagesByUser;
         }
     }
 }
