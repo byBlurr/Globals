@@ -46,40 +46,47 @@ namespace Globals.Data
         public static async Task AddWarningAsync(IUser User, DBConnection dbCon, bool ban = false)
         {
             ulong userid = User.Id;
+            bool Found = false;
 
             string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
             var cmd = new MySqlCommand(query, dbCon.Connection);
             cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
             var reader = await cmd.ExecuteReaderAsync();
 
-            while (await reader.ReadAsync())
+            while (await reader.ReadAsync() && Found == false)
             {
-                int warnings = reader.GetInt32(6);
-                if (warnings <= 2 && ban == false)
+                int warnings = reader.GetInt32(6) + 1;
+                if (warnings < 3 && ban == false)
                 {
                     // Warn them
                     cmd.Dispose();
+                    reader.Close();
 
                     await User.SendMessageAsync("A global chat moderator has warned you for your actions. Please keep the chat mature!");
                     query = "UPDATE user_profiles SET count_warnings = @count_warnings WHERE user_id = @userid";
                     cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
-                    cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = (warnings + 1);
+                    cmd.Parameters.Add("@count_warnings", MySqlDbType.UInt32).Value = warnings;
 
                     try
                     {
                         Console.WriteLine("Warned user " + User.Username + ".");
+                        Found = true;
                         await cmd.ExecuteNonQueryAsync();
+                        cmd.Dispose();
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine("Error: " + e.Message);
+                        cmd.Dispose();
                     }
                 }
                 else
                 {
                     // Blacklist them
                     cmd.Dispose();
+                    reader.Close();
+
                     await User.SendMessageAsync("A global chat moderator has warned you for your actions. You have been blacklisted!");
                     query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
                     cmd = new MySqlCommand(query, dbCon.Connection);
@@ -90,16 +97,18 @@ namespace Globals.Data
                     try
                     {
                         Console.WriteLine("Blacklisted user " + User.Username + ".");
+                        Found = true;
                         await cmd.ExecuteNonQueryAsync();
+                        cmd.Dispose();
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine("Error: " + e.Message);
+                        cmd.Dispose();
                     }
                 }
             }
-            reader.Close();
-            cmd.Dispose();
+            dbCon.Close();
         }
 
         public static async Task UnBanUserAsync(IUser User, DBConnection dbCon)

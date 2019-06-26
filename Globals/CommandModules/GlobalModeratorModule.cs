@@ -28,7 +28,6 @@ namespace Globals.CommandModules
                         await UserProfile.AddWarningAsync(User, dbCon);
                         await Context.User.SendMessageAsync("You warned " + User.Username + ".");
                     }
-                    dbCon.Close();
                 }
             }
         }
@@ -46,10 +45,10 @@ namespace Globals.CommandModules
                     if (UserProfile.CanModerate(Context.User.Id, dbCon))
                     {
                         await Context.Message.DeleteAsync();
+                        await Message.DeleteAsync(User, dbCon);
                         await UserProfile.AddWarningAsync(User, dbCon, true);
                         await Context.User.SendMessageAsync("You blacklisted " + User.Username + ".");
                     }
-                    dbCon.Close();
                 }
             }
         }

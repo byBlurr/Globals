@@ -95,12 +95,15 @@ namespace Globals.Global
 
         public static async Task DeleteAsync(IUser User, DBConnection dbCon)
         {
+            List<IMessage> MessagesToRemove = new List<IMessage>();
+
             string query = "SELECT * FROM server_configs;";
             var cmd = new MySqlCommand(query, dbCon.Connection);
             var reader = await cmd.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
+                // Gaming Channel
                 if (reader.GetInt32(12) == 1)
                 {
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
@@ -115,8 +118,7 @@ namespace Globals.Global
                                 {
                                     if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
                                     {
-                                        var emb = embed.ToEmbedBuilder().WithDescription("Message was removed...").Build();
-                                        await (message as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                                        MessagesToRemove.Add(message);
                                     }
                                 }
                             }
@@ -125,9 +127,21 @@ namespace Globals.Global
                 }
             }
 
-            Console.WriteLine("Removed messages by " + User.Username + ".");
             reader.Close();
             cmd.Dispose();
+
+            var remove = Task.Run(async () =>
+            {
+                for (int i = 0; i <= MessagesToRemove.Count; i++)
+                {
+                    foreach (IEmbed embed in MessagesToRemove[i].Embeds)
+                    {
+                        var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
+                        await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                        await Task.Delay(1000);
+                    }
+                }
+            });
         }
 
         public static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
