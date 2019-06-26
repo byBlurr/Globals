@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Globals.Data;
+using Globals.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,8 @@ namespace Globals.CommandModules
             await Context.Message.DeleteAsync();
 
             await ServerConfig.RegisterServerAsync(Context.Guild.Id);
-            await Context.Channel.SendMessageAsync("Setup started, use the command `!enable` next.");
+            var Message = await Context.Channel.SendMessageAsync("Setup started, use the command `!enable` next.");
+            await Delete.DeleteMessage(Message);
         }
 
         [Command("enable")]
@@ -54,7 +56,8 @@ namespace Globals.CommandModules
             embed.AddField(new EmbedFieldBuilder() { Name = "Apex", Value = ApexState });
             embed.WithCurrentTimestamp();
 
-            await Context.Channel.SendMessageAsync(null, false, embed.Build());
+            var Message = await Context.Channel.SendMessageAsync(null, false, embed.Build());
+            await Delete.DeleteMessage(Message);
         }
 
         [Command("create")]
@@ -143,7 +146,8 @@ namespace Globals.CommandModules
 
             await ServerConfig.SetupChannels(Context.Guild.Id, GamingId, MusicId, MoviesId, R6Id, LeagueId, RustId, GtaId, PubgId, FortniteId, ApexId);
 
-            await Context.Channel.SendMessageAsync("Setup completed, use the command `!help` to modify your settings in the future.");
+            var Message = await Context.Channel.SendMessageAsync("Setup completed, use the command `!help` to modify your settings in the future.");
+            await Delete.DeleteMessage(Message);
         }
     }
 }
