@@ -1,5 +1,6 @@
 ﻿using Data;
 using Discord;
+using Globals.Global;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace Globals.Data
                 {
                     // Warn them
                     cmd.Dispose();
-                    reader.Close();
+
                     await User.SendMessageAsync("A global chat moderator has warned you for your actions. Please keep the chat mature!");
                     query = "UPDATE user_profiles SET count_warnings = @count_warnings WHERE user_id = @userid";
                     cmd = new MySqlCommand(query, dbCon.Connection);
@@ -67,6 +68,7 @@ namespace Globals.Data
 
                     try
                     {
+                        Console.WriteLine("Warned user " + User.Username + ".");
                         await cmd.ExecuteNonQueryAsync();
                     }
                     catch (Exception e)
@@ -78,7 +80,6 @@ namespace Globals.Data
                 {
                     // Blacklist them
                     cmd.Dispose();
-                    reader.Close();
                     await User.SendMessageAsync("A global chat moderator has warned you for your actions. You have been blacklisted!");
                     query = "UPDATE user_profiles SET count_warnings = @count_warnings, user_blacklisted = @blacklisted WHERE user_id = @userid";
                     cmd = new MySqlCommand(query, dbCon.Connection);
@@ -88,6 +89,7 @@ namespace Globals.Data
 
                     try
                     {
+                        Console.WriteLine("Blacklisted user " + User.Username + ".");
                         await cmd.ExecuteNonQueryAsync();
                     }
                     catch (Exception e)
@@ -96,8 +98,8 @@ namespace Globals.Data
                     }
                 }
             }
-            cmd.Dispose();
             reader.Close();
+            cmd.Dispose()
         }
 
         public static async Task UnBanUserAsync(IUser User, DBConnection dbCon)

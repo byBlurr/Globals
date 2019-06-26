@@ -24,7 +24,7 @@ namespace Globals.Global
 
             string message_text = Context.Message.Content;
             string message_channel = "";
-            string message_footer = Context.Message.Timestamp.ToString();
+            string message_footer =  user_id + " - " + Context.Message.Timestamp.ToString();
 
             var dbCon = DBConnection.Instance();
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
@@ -107,20 +107,27 @@ namespace Globals.Global
                     var Messages = await Channel.GetMessagesAsync(20).FlattenAsync();
                     foreach (IMessage message in Messages)
                     {
-                        foreach (IEmbed embed in message.Embeds)
+                        if (message != null)
                         {
-                            if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                            foreach (IEmbed embed in message.Embeds)
                             {
-                                var emb = embed.ToEmbedBuilder().WithDescription("Message was removed...").Build();
-                                await (message as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                                if (embed.Footer.HasValue)
+                                {
+                                    if (embed.Footer.Value.Text.Contains(User.Id.ToString()))
+                                    {
+                                        var emb = embed.ToEmbedBuilder().WithDescription("Message was removed...").Build();
+                                        await (message as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
 
-            cmd.Dispose();
+            Console.WriteLine("Removed messages by " + User.Username + ".");
             reader.Close();
+            cmd.Dispose();
         }
 
         public static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
