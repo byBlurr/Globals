@@ -99,7 +99,7 @@ namespace Globals.Data
                 }
             }
             reader.Close();
-            cmd.Dispose()
+            cmd.Dispose();
         }
 
         public static async Task UnBanUserAsync(IUser User, DBConnection dbCon)
