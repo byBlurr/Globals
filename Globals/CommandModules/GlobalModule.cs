@@ -51,9 +51,9 @@ namespace Globals.CommandModules
         }
 
         [Command("profile")]
-        public async Task ProfileIdAsync(ulong ID = 0)
+        public async Task ProfileIdAsync(int ID = -1)
         {
-            if (ID != 0)
+            if (ID != -1)
             {
                 var dbCon = DBConnection.Instance();
                 dbCon.DatabaseName = BotConfig.Load().DatabaseName;
@@ -65,7 +65,7 @@ namespace Globals.CommandModules
                     {
                         await Context.Message.DeleteAsync();
 
-                        ulong userid = ID;
+                        ulong userid = await UserProfile.GetUserIdFromGId(ID, dbCon);
                         int scount = await UserProfile.GetServerCountAsync(userid, dbCon);
                         int mcount = await UserProfile.GetMessageCountAsync(userid, dbCon);
                         int wcount = await UserProfile.GetWarningCountAsync(userid, dbCon);
@@ -73,10 +73,10 @@ namespace Globals.CommandModules
 
                         var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
                         embed.WithAuthor(Context.User.Username + " from " + Context.Guild.Name, Context.User.GetAvatarUrl());
-                        embed.WithDescription(ID + "'s Global Profile");
+                        embed.WithDescription(userid + "'s Global Profile");
                         embed.AddField(new EmbedFieldBuilder() { Name = "User ID", Value = userid, IsInline = true });
-                        embed.AddField(new EmbedFieldBuilder() { Name = "Servers", Value = scount + " servers", IsInline = true });
-                        embed.AddField(new EmbedFieldBuilder() { Name = "Messages", Value = mcount + " messages", IsInline = true });
+                        //embed.AddField(new EmbedFieldBuilder() { Name = "Servers", Value = scount + " servers", IsInline = true });
+                        //embed.AddField(new EmbedFieldBuilder() { Name = "Messages", Value = mcount + " messages", IsInline = true });
                         embed.AddField(new EmbedFieldBuilder() { Name = "Warnings", Value = wcount + "/3", IsInline = true });
                         embed.AddField(new EmbedFieldBuilder() { Name = "Group", Value = group, IsInline = true });
                         embed.WithCurrentTimestamp();
@@ -124,8 +124,8 @@ namespace Globals.CommandModules
                         embed.WithAuthor(Context.User.Username + " from " + Context.Guild.Name, Context.User.GetAvatarUrl());
                         embed.WithDescription(User.Username + "#" + User.DiscriminatorValue + "'s Global Profile");
                         embed.AddField(new EmbedFieldBuilder() { Name = "User ID", Value = userid, IsInline = true });
-                        embed.AddField(new EmbedFieldBuilder() { Name = "Servers", Value = scount + " servers", IsInline = true });
-                        embed.AddField(new EmbedFieldBuilder() { Name = "Messages", Value = mcount + " messages", IsInline = true });
+                        //embed.AddField(new EmbedFieldBuilder() { Name = "Servers", Value = scount + " servers", IsInline = true });
+                        //embed.AddField(new EmbedFieldBuilder() { Name = "Messages", Value = mcount + " messages", IsInline = true });
                         embed.AddField(new EmbedFieldBuilder() { Name = "Warnings", Value = wcount + "/3", IsInline = true });
                         embed.AddField(new EmbedFieldBuilder() { Name = "Group", Value = group, IsInline = true });
                         embed.WithThumbnailUrl(User.GetAvatarUrl());
