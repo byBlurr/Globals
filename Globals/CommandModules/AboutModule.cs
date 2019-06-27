@@ -39,6 +39,11 @@ namespace Globals.CommandModules
                 "**Global Commands**\nCommands that are only available in the global channels.\n" +
                 "    `!profile <user>` - View the profile of another user. User @user if they're in the same server as you or their user id if not. User id is in the footer of their message.\n" +
                 "    `!request <feature> - Suggest new features for the global chat or Discord server, remember to be descriptive! We may message you for more information.\n" +
+                "**Other Commands**\nOther commands for you to try out\n" +
+                "    `!help` - Brings up this message derp..." +
+                "    `!developer` - Will give you information on the developers of Globals." +
+                "    `!about` - Will tell you a little about Globals." +
+                "    `!donate` - Will give you information on how you can support Globals!" +
                 "**Moderation Commands**\nCommands for Global Moderators\n" +
                 "    `!war...` - Wait you don't need to know these! You will be told these, if you become a global moderator!\n\n" +
                 "**More Information**\n" +
@@ -68,7 +73,8 @@ namespace Globals.CommandModules
             await Context.Message.DeleteAsync();
             var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
             embed.WithTitle("Support Globals");
-            embed.WithDescription("Donating to Globals will help us host, develop and manage the Discord bot. A huge thank you to anyone who donates, we appreciate every penny. We have big plans for Globals and are looking to expand further. Click the title of this embed to go to the donation page!");
+            embed.WithDescription("Donating to Globals will help us host, develop and manage the Discord bot. A huge thank you to anyone who donates, we appreciate every penny. We have big plans for Globals and are looking to expand further. Click the title of this embed to go to the donation page!\n\n" +
+                "You could also support us by heading over to the official Globals server and boosting the server!");
             embed.WithUrl("https://paypal.me/pools/c/8fZ8flHgt5");
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/591710482696634369/593207970234499104/0.jpg");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
