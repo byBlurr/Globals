@@ -10,6 +10,7 @@ namespace Globals.CommandModules
     public class AboutModule : ModuleBase
     {
         [Command("about")]
+        [Alias("?")]
         public async Task AboutAsync()
         {
             await Context.Message.DeleteAsync();
@@ -18,7 +19,23 @@ namespace Globals.CommandModules
             embed.WithDescription("Global Bot aims to bring different communities closer. Global chats are a good way to find new team mates, people to play against or good to chat with new people.");
             embed.WithUrl("https://discord.gg/kgjZaNt");
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/587411637363802135/593832015065776138/0.jpg");
-            embed.WithAuthor("", Context.Guild.IconUrl);
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
+
+        [Command("rules")]
+        public async Task RulesAsync()
+        {
+            await Context.Message.DeleteAsync();
+
+            var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+            embed.WithTitle("Global Chat Rules");
+            embed.WithDescription("- No racial or sexual slurs, these channels are NOT marked NSFW.\n" +
+                "- No bullying of any kind.\n" +
+                "- No advertising of any kind.\n" +
+                "- No spamming or flooding.\n\n" +
+                "Breaking any of the above rules will result in a warning. 3 warnings will automatically blacklist you from global channels. A moderator can choose to blacklist you before 3 warnings however. If you get blacklisted, you will have to appeal your blacklist by messaging a moderator.");
+            embed.WithUrl("https://discord.gg/kgjZaNt");
+            embed.WithImageUrl("https://cdn.discordapp.com/attachments/587411637363802135/593832015065776138/0.jpg");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
@@ -39,6 +56,7 @@ namespace Globals.CommandModules
                 "-    `!request <feature>` - Suggest new features for the global chat or Discord server, remember to be descriptive! We may message you for more information.\n" +
                 "\n**Other Commands**\nOther commands for you to try out\n" +
                 "-    `!help` - Brings up this message derp...\n" +
+                "-    `!rules` - Displays the global chat rules.\n" +
                 "-    `!developer` - Will give you information on the developers of Globals.\n" +
                 "-    `!about` - Will tell you a little about Globals.\n" +
                 "-    `!donate` - Will give you information on how you can support Globals!\n" +
