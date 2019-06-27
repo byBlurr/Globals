@@ -11,6 +11,8 @@
 ## About Globals
 Global Bot aims to bring different communities closer. Global chats are a good way to find new team mates, people to play against or good to chat with new people.
 
+![Github_social](https://cdn.discordapp.com/attachments/587411637363802135/593832015065776138/0.jpg)
+
 ## Inviting Global Bot
 - Start by inviting the bot to your server, just like any other bot. 
   (https://discordapp.com/oauth2/authorize?client_id=591434736514367508&scope=bot&permissions=1611132113)
