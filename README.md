@@ -1,5 +1,4 @@
 # Globals - Bringing communities closer
-![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m778918918-3e92c097147760ee39d02d36.svg?style=for-the-badge)
 ![Discord](https://img.shields.io/discord/591710248360738863.svg?label=Official%20Discord&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/byBlurr/Globals.svg?style=for-the-badge)
 
