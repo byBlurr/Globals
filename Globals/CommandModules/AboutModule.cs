@@ -33,8 +33,6 @@ namespace Globals.CommandModules
                 "    `!setup` - Start the setup process and add your server/guild to the database.\n" +
                 "    `!enable <channel> <true|false>` - Enable or Disable global channels on your server.\n" +
                 "    `!create` - Create the Globals category and channels in your server. Will only create the channels you have enabled.\n" +
-                "    `!add <channel>` - Will enable the channel on your server.\n" +
-                "    `!rem <channel>` - Will disable the channel on your server.\n" +
                 "    `!update` - Will delete and create the added or removed channels, make sure you do this everytime you add or remove channels.\n" +
                 "**Global Commands**\nCommands that are only available in the global channels.\n" +
                 "    `!profile <user>` - View the profile of another user. User @user if they're in the same server as you or their user id if not. User id is in the footer of their message.\n" +

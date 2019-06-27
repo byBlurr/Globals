@@ -149,5 +149,203 @@ namespace Globals.CommandModules
             var Message = await Context.Channel.SendMessageAsync("Setup completed, use the command `!help` to modify your settings in the future.");
             await Delete.DeleteMessage(Message);
         }
+
+        [Command("update")]
+        [RequireBotPermission(GuildPermission.ManageChannels)]
+        public async Task UpdateAsync()
+        {
+            await Context.Message.DeleteAsync();
+
+            // Check what channels have been disabled.
+            // Delete any that have been disabled.
+
+            // Check what channels have been enabled.
+            // Create any that have been enabled.
+
+            var cats = Context.Guild.GetCategoriesAsync().Result;
+            ICategoryChannel cat = null;
+            foreach (var category in cats)
+            {
+                if (category.Name.ToLower().Equals("globals"))
+                {
+                    cat = category;
+                }
+            }
+
+            if (cat != null)
+            {
+                bool GamingState = false, MusicState = false, MoviesState = false, R6State = false, LeagueState = false, RustState = false, GtaState = false, PubgState = false, FortniteState = false, ApexState = false;
+                ulong GamingId = 0, MusicId = 0, MoviesId = 0, R6Id = 0, LeagueId = 0, RustId = 0, GtaId = 0, PubgId = 0, FortniteId = 0, ApexId = 0;
+                ServerConfig.GetChannelSettingsAsBool(Context.Guild.Id, ref GamingState, ref MusicState, ref MoviesState, ref R6State, ref LeagueState, ref RustState, ref GtaState, ref PubgState, ref FortniteState, ref ApexState);
+                ServerConfig.GetChannelIds(Context.Guild.Id, ref GamingId, ref MusicId, ref MoviesId, ref R6Id, ref LeagueId, ref RustId, ref GtaId, ref PubgId, ref FortniteId, ref ApexId);
+
+                if (GamingState == true && GamingId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Gaming");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    GamingId = chan.Id;
+                }
+                else if (GamingState == false && GamingId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(GamingId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        GamingId = 0;
+                    }
+                }
+
+                if (MusicState == true && MusicId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Music");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    MusicId = chan.Id;
+                }
+                else if (MusicState == false && MusicId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(MusicId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        MusicId = 0;
+                    }
+                }
+
+                if (MoviesState == true && MoviesId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Movies");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    MoviesId = chan.Id;
+                }
+                else if (MoviesState == false && MoviesId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(MoviesId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        MoviesId = 0;
+                    }
+                }
+
+                if (R6State == true && R6Id == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Rainbow Six");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    R6Id = chan.Id;
+                }
+                else if (R6State == false && R6Id != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(R6Id);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        R6Id = 0;
+                    }
+                }
+
+                if (LeagueState == true && LeagueId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("League");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    LeagueId = chan.Id;
+                }
+                else if (LeagueState == false && LeagueId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(LeagueId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        LeagueId = 0;
+                    }
+                }
+
+                if (RustState == true && RustId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Rust");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    RustId = chan.Id;
+                }
+                else if (RustState == false && RustId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(RustId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        RustId = 0;
+                    }
+                }
+
+                if (GtaState == true && GtaId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("GTA");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    GtaId = chan.Id;
+                }
+                else if (GtaState == false && GtaId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(GtaId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        GtaId = 0;
+                    }
+                }
+
+                if (PubgState == true && PubgId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("PUBG");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    PubgId = chan.Id;
+                }
+                else if (PubgState == false && PubgId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(PubgId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        PubgId = 0;
+                    }
+                }
+
+                if (FortniteState == true && FortniteId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Fortnite");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    FortniteId = chan.Id;
+                }
+                else if (FortniteState == false && FortniteId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(FortniteId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        FortniteId = 0;
+                    }
+                }
+
+                if (ApexState == true && ApexId == 0)
+                {
+                    var chan = await Context.Guild.CreateTextChannelAsync("Apex");
+                    await chan.ModifyAsync(x => x.CategoryId = cat.Id);
+                    ApexId = chan.Id;
+                }
+                else if (ApexState == false && ApexId != 0)
+                {
+                    var chan = await Context.Guild.GetChannelAsync(ApexId);
+                    if (chan != null)
+                    {
+                        await chan.DeleteAsync();
+                        ApexId = 0;
+                    }
+                }
+
+                await ServerConfig.SetupChannels(Context.Guild.Id, GamingId, MusicId, MoviesId, R6Id, LeagueId, RustId, GtaId, PubgId, FortniteId, ApexId);
+            }
+            else
+            {
+                var message = await Context.Channel.SendMessageAsync("We couldn't find the globals category in your server, I suggest deleting all the global channels and category. Then run the `!setup` command again.");
+                await Delete.DeleteMessage(message);
+            }
+        }
     }
 }

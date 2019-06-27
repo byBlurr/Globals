@@ -175,6 +175,36 @@ namespace Globals.Data
             }
         }
 
+        public static void GetChannelIds(ulong serverid, ref ulong gamingId, ref ulong musicId, ref ulong moviesId, ref ulong r6Id, ref ulong leagueId, ref ulong rustId, ref ulong gtaId, ref ulong pubgId, ref ulong fortniteId, ref ulong apexId)
+        {
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+
+            if (dbCon.IsConnect())
+            {
+                string query = "SELECT * FROM server_configs WHERE server_id = @serverid";
+                var cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = serverid;
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    if (reader.GetInt64(2) != 0) gamingId = (ulong)reader.GetInt64(2);
+                    if (reader.GetInt64(3) != 0) musicId = (ulong)reader.GetInt64(3);
+                    if (reader.GetInt64(4) != 0) moviesId = (ulong)reader.GetInt64(4);
+                    if (reader.GetInt64(5) != 0) r6Id = (ulong)reader.GetInt64(5);
+                    if (reader.GetInt64(6) != 0) leagueId = (ulong)reader.GetInt64(6);
+                    if (reader.GetInt64(7) != 0) rustId = (ulong)reader.GetInt64(7);
+                    if (reader.GetInt64(8) != 0) gtaId = (ulong)reader.GetInt64(8);
+                    if (reader.GetInt64(9) != 0) pubgId = (ulong)reader.GetInt64(9);
+                    if (reader.GetInt64(10) != 0) fortniteId = (ulong)reader.GetInt64(10);
+                    if (reader.GetInt64(11) != 0) apexId = (ulong)reader.GetInt64(11);
+                }
+
+                dbCon.Close();
+            }
+        }
+
         public static async Task SetupChannels(ulong serverid, ulong gamingId, ulong musicId, ulong moviesId, ulong r6Id, ulong leagueId, ulong rustId, ulong gtaId, ulong pubgId, ulong fortniteId, ulong apexId)
         {
             var dbCon = DBConnection.Instance();
