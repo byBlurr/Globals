@@ -111,6 +111,25 @@ namespace Globals.Data
             dbCon.Close();
         }
 
+        public static async Task<string> GetGlobalsIdAsync(ulong userid, DBConnection dbCon)
+        {
+            string id = "GId: ";
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                id = id + reader.GetInt32(7).ToString();
+            }
+            cmd.Dispose();
+            reader.Close();
+
+            return id;
+        }
+
         public static async Task UnBanUserAsync(IUser User, DBConnection dbCon)
         {
             ulong userid = User.Id;
