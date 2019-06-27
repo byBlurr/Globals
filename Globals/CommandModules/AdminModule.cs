@@ -340,6 +340,9 @@ namespace Globals.CommandModules
                 }
 
                 await ServerConfig.SetupChannels(Context.Guild.Id, GamingId, MusicId, MoviesId, R6Id, LeagueId, RustId, GtaId, PubgId, FortniteId, ApexId);
+
+                var message = await Context.Channel.SendMessageAsync("Your global channels should now be updated. Please use the `!request` command in a global channel, if you have any issues.");
+                await Delete.DeleteMessage(message);
             }
             else
             {
