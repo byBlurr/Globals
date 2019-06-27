@@ -43,7 +43,7 @@ namespace Globals.CommandModules
             ServerConfig.GetChannelSettingsAsText(Context.Guild.Id, ref GamingState, ref MusicState, ref MoviesState, ref R6State, ref LeagueState, ref RustState, ref GtaState, ref PubgState, ref FortniteState, ref ApexState);
 
             var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
-            embed.WithDescription("Enable/Disable channels using `!enable <channel> <true/false>`, for example `!enable rainbow6 true`.\nOnce the correct channels are set, use the command `!create` next.");
+            embed.WithDescription("Enable/Disable channels using `!enable <channel> <true/false>`, for example `!enable rainbow6 true`.\nOnce the correct channels are set, use the command `!create`, if this is the initial setup or `!update`, if the bot is already setup on your server.");
             embed.AddField(new EmbedFieldBuilder() { Name = "Gaming", Value = GamingState });
             embed.AddField(new EmbedFieldBuilder() { Name = "Music", Value = MusicState });
             embed.AddField(new EmbedFieldBuilder() { Name = "Movies", Value = MoviesState });
@@ -146,7 +146,7 @@ namespace Globals.CommandModules
 
             await ServerConfig.SetupChannels(Context.Guild.Id, GamingId, MusicId, MoviesId, R6Id, LeagueId, RustId, GtaId, PubgId, FortniteId, ApexId);
 
-            var Message = await Context.Channel.SendMessageAsync("Setup completed, use the command `!help` to modify your settings in the future.");
+            var Message = await Context.Channel.SendMessageAsync("Setup completed, use the `!update` command again to disable/enable channels in the future, once you disable or enable servers, use the `!update` command.");
             await Delete.DeleteMessage(Message);
         }
 
