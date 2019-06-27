@@ -25,6 +25,7 @@ namespace Globals.Global
             string message_text = Context.Message.Content;
             string message_channel = "";
             string message_footer =  user_id + " - " + Context.Message.Timestamp.ToString();
+            IReadOnlyCollection<Attachment> message_images = Context.Message.Attachments;
 
             var dbCon = DBConnection.Instance();
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
@@ -79,7 +80,7 @@ namespace Globals.Global
                     {
                         if (!user_rank.ToLower().Equals("blacklisted"))
                         {
-                            await PostMessageAsync(message_channel, reader, embed);
+                            await PostMessageAsync(message_channel, reader, embed, message_images);
                         }
                     }
 
@@ -129,7 +130,7 @@ namespace Globals.Global
             return message_channel;
         }
 
-        public static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed)
+        public static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images = null)
         {
             if (message_channel.Equals(References.GamingChannel))
             {
@@ -144,11 +145,22 @@ namespace Globals.Global
                         var channel = guild.GetChannel(Id);
                         if (channel != null)
                         {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                            if (message_images != null)
+                            {
+                                if (message_images.Count > 0)
+                                {
+                                    foreach (var attachment in message_images)
+                                    {
+                                        //await (channel as IMessageChannel).SendFileAsync(attachment.Url);
+                                    }
+                                }
+                            }
+                            var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -170,7 +182,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -192,7 +205,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -214,7 +228,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -236,7 +251,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -258,7 +274,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -280,7 +297,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -302,7 +320,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -324,7 +343,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
@@ -346,7 +366,8 @@ namespace Globals.Global
                         }
                         else
                         {
-                            await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                            await Delete.DeleteMessage(message);
                         }
                     }
                 }
