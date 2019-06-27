@@ -48,9 +48,9 @@ namespace Globals.CommandModules
         {
             await Context.Message.DeleteAsync();
             var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
-            embed.WithTitle("Donate to Globals");
-            embed.WithDescription("A cool way to donate to the developers will be here eventually.");
-            embed.WithUrl("https://discord.gg/kgjZaNt");
+            embed.WithTitle("Support Globals");
+            embed.WithDescription("Donating to Globals will help us host, develop and manage the Discord bot. A huge thank you to anyone who donates, we appreciate every penny. We have big plans for Globals and are looking to expand further. Click the title of this embed to go to the donation page!");
+            embed.WithUrl("https://paypal.me/pools/c/8fZ8flHgt5");
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/591710482696634369/593207970234499104/0.jpg");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
