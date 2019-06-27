@@ -94,7 +94,7 @@ namespace Globals.CommandModules
             }
             else
             {
-                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!profile <user>`, for example `!profile @Blurr#3760` or `!profile 211938243535568896`.\nIf the user is not in the same server as you, you must use the user id.");
+                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!profile <user>`, for example using mention `!profile @Blurr#3760` or using GId `!profile 2`.\nIf the user is not in the same server as you, you must use the globals id (GId).");
                 await Delete.DeleteMessage(message);
             }
         }
@@ -144,7 +144,7 @@ namespace Globals.CommandModules
             }
             else
             {
-                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!profile <user>`, for example `!profile @Blurr#3760` or `!profile 211938243535568896`.\nIf the user is not in the same server as you, you must use the user id.");
+                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!profile <user>`, for example using mention `!profile @Blurr#3760` or using GId `!profile 2`.\nIf the user is not in the same server as you, you must use the globals id (GId).");
                 await Delete.DeleteMessage(message);
             }
         }
