@@ -36,9 +36,17 @@ namespace Globals.CommandModules
                         embed.WithDescription(Request);
                         embed.WithCurrentTimestamp();
                         await Channel.SendMessageAsync("", false, embed.Build());
+
+                        var message = await Context.Channel.SendMessageAsync("Thank you for your suggestion, out team will now look into it and get back to you!");
+                        await Delete.DeleteMessage(message);
                     }
                     dbCon.Close();
                 }
+            }
+            else
+            {
+                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!request <idea>`, for example `!request Pokemon GO global channel`.");
+                await Delete.DeleteMessage(message);
             }
         }
 
@@ -84,6 +92,11 @@ namespace Globals.CommandModules
                     dbCon.Close();
                 }
             }
+            else
+            {
+                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!profile <user>`, for example `!profile @Blurr#3760` or `!profile 211938243535568896`.\nIf the user is not in the same server as you, you must use the user id.");
+                await Delete.DeleteMessage(message);
+            }
         }
 
         [Command("profile")]
@@ -128,6 +141,11 @@ namespace Globals.CommandModules
                     }
                     dbCon.Close();
                 }
+            }
+            else
+            {
+                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!profile <user>`, for example `!profile @Blurr#3760` or `!profile 211938243535568896`.\nIf the user is not in the same server as you, you must use the user id.");
+                await Delete.DeleteMessage(message);
             }
         }
     }
