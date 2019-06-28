@@ -9,15 +9,29 @@ namespace Globals.CommandModules
 {
     public class AboutModule : ModuleBase
     {
+        [Command("invite")]
+        [Alias("inv")]
+        public async Task InviteAsync()
+        {
+            await Context.Message.DeleteAsync();
+            var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+            embed.WithTitle("Invite Global Bot");
+            embed.WithDescription("Click above to invite global bot to your server.");
+            embed.WithUrl("http://globalbot.blurrdev.com");
+            embed.WithImageUrl("https://cdn.discordapp.com/attachments/587411637363802135/593832015065776138/0.jpg");
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
+
         [Command("about")]
-        [Alias("?")]
+        [Alias("?", "server", "supportserver")]
         public async Task AboutAsync()
         {
             await Context.Message.DeleteAsync();
             var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
             embed.WithTitle("About Globals");
-            embed.WithDescription("Global Bot aims to bring different communities closer. Global chats are a good way to find new team mates, people to play against or good to chat with new people.");
-            embed.WithUrl("https://discord.gg/kgjZaNt");
+            embed.WithDescription("Global Bot aims to bring different communities closer. Global chats are a good way to find new team mates, people to play against or good to chat with new people.\n\n" +
+                "Click above to join the official Globals server.");
+            embed.WithUrl("http://globals.blurrdev.com");
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/587411637363802135/593832015065776138/0.jpg");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
@@ -58,6 +72,8 @@ namespace Globals.CommandModules
                 "-    `!request <feature>` - Suggest new features for the global chat or Discord server, remember to be descriptive! We may message you for more information.\n" +
                 "\n**Other Commands**\nOther commands for you to try out\n" +
                 "-    `!help` - Brings up this message derp...\n" +
+                "-    `!invite` - Invite the bot to your server.\n" +
+                "-    `!server` - Join the Globals Discord server.\n" +
                 "-    `!rules` - Displays the global chat rules.\n" +
                 "-    `!developer` - Will give you information on the developers of Globals.\n" +
                 "-    `!about` - Will tell you a little about Globals.\n" +
