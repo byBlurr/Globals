@@ -14,7 +14,7 @@ namespace Globals.CommandModules
     public class AdminModule : ModuleBase
     {
         [Command("setup")]
-        [RequireBotPermission(GuildPermission.ManageChannels)]
+        [RequireUserPermission(GuildPermission.ManageChannels)]
         public async Task RegisterAsync()
         {
             await Context.Message.DeleteAsync();
@@ -25,7 +25,7 @@ namespace Globals.CommandModules
         }
 
         [Command("enable")]
-        [RequireBotPermission(GuildPermission.ManageChannels)]
+        [RequireUserPermission(GuildPermission.ManageChannels)]
         public async Task EnableAsync(string channel = "", bool toggle = true)
         {
             await Context.Message.DeleteAsync();
@@ -59,7 +59,7 @@ namespace Globals.CommandModules
         }
 
         [Command("create")]
-        [RequireBotPermission(GuildPermission.ManageChannels)]
+        [RequireUserPermission(GuildPermission.ManageChannels)]
         public async Task CreateAsync()
         {
             await Context.Message.DeleteAsync();
@@ -90,7 +90,7 @@ namespace Globals.CommandModules
         }
 
         [Command("update")]
-        [RequireBotPermission(GuildPermission.ManageChannels)]
+        [RequireUserPermission(GuildPermission.ManageChannels)]
         public async Task UpdateAsync()
         {
             await Context.Message.DeleteAsync();
