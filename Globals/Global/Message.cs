@@ -129,8 +129,21 @@ namespace Globals.Global
                             {
                                 if (embed != null)
                                 {
-                                    var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
-                                    await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                                    /*if (MessagesToRemove[i].Attachments.Count > 0)
+                                    {
+                                        Console.WriteLine("DOES THIS EVEN WORK BRUV?!?");
+                                        var chan = MessagesToRemove[i].Channel;
+
+                                        await MessagesToRemove[i].DeleteAsync();
+                                        var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
+                                        await chan.SendMessageAsync(null, false, emb);
+                                    }
+                                    else
+                                    {*/
+                                        var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
+                                        await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb);
+                                    //}
+
                                     await Task.Delay(1100);
                                 }
                                 else
