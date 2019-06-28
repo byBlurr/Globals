@@ -40,7 +40,7 @@ namespace Globals.CommandModules
                                 {
                                     foreach (var embed in message.Embeds)
                                     {
-                                        await (message as IUserMessage).ModifyAsync(x => x.Embed = embed.ToEmbedBuilder().WithDescription(replacement).Build());
+                                        await (message as IUserMessage).ModifyAsync(x => x.Embed = embed.ToEmbedBuilder().WithDescription(replacement + " _- edited._").Build());
                                         await Task.Delay(1100);
                                     }
                                 }
