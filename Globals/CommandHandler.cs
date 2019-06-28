@@ -10,6 +10,7 @@ using Globals.Data;
 using Globals.Global;
 using Globals.Util;
 using Data;
+using Globals.Channels;
 
 namespace Globals
 {
@@ -92,6 +93,7 @@ namespace Globals
 
         private async Task ReadyAsync()
         {
+            ChannelData.PopulateChannels();
             await GlobalMessages.ClearData();
             await UpdateStatus();
         }
