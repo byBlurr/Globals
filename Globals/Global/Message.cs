@@ -102,7 +102,7 @@ namespace Globals.Global
 
         public static async Task DeleteAsync(IUser User, DBConnection dbCon)
         {
-            List<IMessage> MessagesToRemove = await GetMessagesByUser(User, dbCon);
+            List<IMessage> MessagesToRemove = await GetMessagesByUserAsync(User, dbCon);
 
             var remove = Task.Run(async () =>
             {
@@ -500,7 +500,7 @@ namespace Globals.Global
             }
         }
 
-        private static async Task<List<IMessage>> GetMessagesByUser(IUser User, DBConnection dbCon)
+        public static async Task<List<IMessage>> GetMessagesByUserAsync(IUser User, DBConnection dbCon, int amount = 10)
         {
             string GId = await UserProfile.GetGlobalsIdAsync(User.Id, dbCon);
 
@@ -516,8 +516,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(13) == 1)
@@ -525,8 +525,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(3));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(14) == 1)
@@ -534,8 +534,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(4));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(15) == 1)
@@ -543,8 +543,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(5));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(16) == 1)
@@ -552,8 +552,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(6));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(17) == 1)
@@ -561,8 +561,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(7));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(18) == 1)
@@ -570,8 +570,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(8));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(19) == 1)
@@ -579,8 +579,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(9));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(20) == 1)
@@ -588,8 +588,8 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(10));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
                 if (reader.GetInt32(21) == 1)
@@ -597,14 +597,59 @@ namespace Globals.Global
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(11));
                     if (Channel != null)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                        AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
             }
             reader.Close();
             cmd.Dispose();
             return MessagesByUser;
+        }
+
+        public static async Task<List<IMessage>> GetMessageByUserAsync(IUser User, DBConnection dbCon, string channel)
+        {
+            List<IMessage> MessagesByUser = new List<IMessage>();
+            string GId = await UserProfile.GetGlobalsIdAsync(User.Id, dbCon);
+
+            string query = "SELECT * FROM server_configs;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                if (channel == References.GamingChannel)
+                {
+                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
+                    if (Channel != null)
+                    {
+                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                    }
+                }
+            }
+
+            return MessagesByUser;
+        }
+
+        private static void AddMessagesToListAsync(IEnumerable<IMessage> Messages, string GId, ref List<IMessage> MessagesByUser)
+        {
+            foreach (IMessage message in Messages)
+            {
+                if (message != null)
+                {
+                    foreach (IEmbed embed in message.Embeds)
+                    {
+                        if (embed.Footer.HasValue)
+                        {
+                            if (embed.Footer.Value.Text.Contains(GId))
+                            {
+                                MessagesByUser.Add(message);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private static void AddMessageToListAsync(IEnumerable<IMessage> Messages, string GId, ref List<IMessage> MessagesByUser)
@@ -620,6 +665,8 @@ namespace Globals.Global
                             if (embed.Footer.Value.Text.Contains(GId))
                             {
                                 MessagesByUser.Add(message);
+                                // Return because we only want the first one...
+                                return;
                             }
                         }
                     }

@@ -14,18 +14,99 @@ namespace Globals.CommandModules
 {
     public class GlobalModule : ModuleBase
     {
+        [Command("edit")]
+        public async Task EditLastAsync([Remainder] string replacement = "")
+        {
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+
+            if (dbCon.IsConnect())
+            {
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+
+                if (!ChannelInUse.Equals(""))
+                {
+                    if (!replacement.Equals("") && !ProfanityFilter.HasProfanity(replacement))
+                    {
+                        await Context.Message.DeleteAsync();
+
+                        var messages = Message.GetMessageByUserAsync(Context.User, dbCon, ChannelInUse).Result;
+
+                        var remove = Task.Run(async () =>
+                        {
+                            foreach (var message in messages)
+                            {
+                                if (message != null)
+                                {
+                                    foreach (var embed in message.Embeds)
+                                    {
+                                        await (message as IUserMessage).ModifyAsync(x => x.Embed = embed.ToEmbedBuilder().WithDescription(replacement).Build());
+                                        await Task.Delay(1100);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!edit <new text>`, for example `!edit Pokemon GO is my jam on toast.`.");
+                        await Delete.DeleteMessage(message);
+                    }
+                }
+                dbCon.Close();
+            }
+        }
+
+        [Command("delete")]
+        [Alias("del")]
+        public async Task DeleteLastAsync()
+        {
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+
+            if (dbCon.IsConnect())
+            {
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+
+                if (!ChannelInUse.Equals(""))
+                {
+
+                    await Context.Message.DeleteAsync();
+
+                    var messages = Message.GetMessageByUserAsync(Context.User, dbCon, ChannelInUse).Result;
+
+                    var remove = Task.Run(async () =>
+                    {
+                        foreach (var message in messages)
+                        {
+                            if (message != null)
+                            {
+                                foreach (var embed in message.Embeds)
+                                {
+                                    await (message as IUserMessage).ModifyAsync(x => x.Embed = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by user at " + DateTime.UtcNow.ToString()).Build());
+                                    await Task.Delay(1100);
+                                }
+                            }
+                        }
+                    });
+                }
+                dbCon.Close();
+            }
+        }
+
         [Command("request")]
         public async Task RequestAsync([Remainder] string Request = "")
         {
-            if (!Request.Equals(""))
-            {
-                var dbCon = DBConnection.Instance();
-                dbCon.DatabaseName = BotConfig.Load().DatabaseName;
-                if (dbCon.IsConnect())
-                {
-                    string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
 
-                    if (!ChannelInUse.Equals(""))
+            if (dbCon.IsConnect())
+            {
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+
+                if (!ChannelInUse.Equals(""))
+                {
+                    if (!Request.Equals(""))
                     {
                         await Context.Message.DeleteAsync();
 
@@ -40,13 +121,13 @@ namespace Globals.CommandModules
                         var message = await Context.Channel.SendMessageAsync("Thank you for your suggestion, out team will now look into it and get back to you!");
                         await Delete.DeleteMessage(message);
                     }
-                    dbCon.Close();
                 }
-            }
-            else
-            {
-                var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!request <idea>`, for example `!request Pokemon GO global channel`.");
-                await Delete.DeleteMessage(message);
+                else
+                {
+                    var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!request <idea>`, for example `!request Pokemon GO global channel`.");
+                    await Delete.DeleteMessage(message);
+                }
+                dbCon.Close();
             }
         }
 
