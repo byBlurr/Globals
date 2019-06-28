@@ -70,7 +70,6 @@ namespace Globals.CommandModules
 
                 if (!ChannelInUse.Equals(""))
                 {
-
                     await Context.Message.DeleteAsync();
 
                     var messages = Message.GetMessageByUserAsync(Context.User, dbCon, ChannelInUse).Result;

@@ -52,6 +52,8 @@ namespace Globals.CommandModules
                 "-    `!create` - Create the Globals category and channels in your server. Will only create the channels you have enabled.\n" +
                 "-    `!update` - Will delete and create the added or removed channels, make sure you do this everytime you add or remove channels.\n" +
                 "\n**Global Commands**\nCommands that are only available in the global channels.\n" +
+                "-    `!edit <new_message> - Edit your last message with the new text." +
+                "-    `!delete` - Delete your last message." +
                 "-    `!profile <user>` - View the profile of another user. User @user if they're in the same server as you or their globals id (GId) if not. GId is in the footer of their message.\n" +
                 "-    `!request <feature>` - Suggest new features for the global chat or Discord server, remember to be descriptive! We may message you for more information.\n" +
                 "\n**Other Commands**\nOther commands for you to try out\n" +
