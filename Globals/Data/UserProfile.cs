@@ -11,9 +11,6 @@ namespace Globals.Data
 {
     class UserProfile
     {
-        /// <summary>
-        /// Check if the user already has a profile.
-        /// </summary>
         public static async Task CheckUserAsync(ulong userid, DBConnection dbCon)
         {
             string query = "SELECT * FROM user_profiles WHERE user_id = @userid";

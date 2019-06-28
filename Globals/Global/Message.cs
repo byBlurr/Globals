@@ -2,6 +2,7 @@
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Globals.Channels;
 using Globals.Data;
 using Globals.Util;
 using MySql.Data.MySqlClient;
@@ -155,6 +156,22 @@ namespace Globals.Global
 
         public static async Task PostToChannelAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images = null)
         {
+
+            for (int i = 0; i < ChannelData.Channels.Count; i++)
+            {
+                if(message_channel.Equals(ChannelData.Channels[i].Id))
+                {
+                    var Enabled = reader.GetInt32(ChannelData.Channels[i].IndexToggle);
+                    var Id = (ulong)reader.GetInt64(ChannelData.Channels[i].IndexId);
+
+                    if (Enabled == 1)
+                    {
+                        await PostMessageAsync(message_channel, reader, embed, message_images, Id);
+                    }
+                }
+            }
+
+            /**
             if (message_channel.Equals(References.GamingChannel))
             {
                 var Enabled = reader.GetInt32(12);
@@ -255,6 +272,7 @@ namespace Globals.Global
                     await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
+            **/
         }
 
         private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images, ulong Id)
@@ -291,6 +309,21 @@ namespace Globals.Global
 
         private static void CheckChannel(ref string message_channel, ICommandContext Context, DbDataReader reader)
         {
+            for (int i = 0; i < ChannelData.Channels.Count; i++)
+            {
+                var Enabled = reader.GetInt32(ChannelData.Channels[i].IndexToggle);
+                var Id = (ulong) reader.GetInt64(ChannelData.Channels[i].IndexId);
+
+                if (Enabled == 1)
+                {
+                    if (Id == Context.Channel.Id)
+                    {
+                        message_channel = ChannelData.Channels[i].Id;
+                    }
+                }
+            }
+
+            /*
             var GamingEnabled = reader.GetInt32(12);
             var GamingId = (ulong)reader.GetInt64(2);
             if (GamingEnabled == 1)
@@ -390,6 +423,7 @@ namespace Globals.Global
                     message_channel = References.R6Channel;
                 }
             }
+            */
         }
 
         public static async Task<List<IMessage>> GetMessagesByUserAsync(IUser User, DBConnection dbCon, int amount = 10)
@@ -403,6 +437,20 @@ namespace Globals.Global
 
             while (await reader.ReadAsync())
             {
+                for (int i = 0; i < ChannelData.Channels.Count; i++)
+                {
+                    if (reader.GetInt32(ChannelData.Channels[i].IndexToggle) == 1)
+                    {
+                        var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(ChannelData.Channels[i].IndexId));
+                        if (Channel != null)
+                        {
+                            var Messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
+                            AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
+                        }
+                    }
+                }
+
+                /*
                 if (reader.GetInt32(12) == 1)
                 {
                     var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
@@ -493,6 +541,7 @@ namespace Globals.Global
                         AddMessagesToListAsync(Messages, GId, ref MessagesByUser);
                     }
                 }
+                */
             }
             reader.Close();
             cmd.Dispose();
