@@ -166,7 +166,7 @@ namespace Globals.CommandModules
                         var reader = await cmd.ExecuteReaderAsync();
                         while (await reader.ReadAsync())
                         {
-                            await Message.PostMessageAsync(ChannelInUse, reader, embed);
+                            await Message.PostToChannelAsync(ChannelInUse, reader, embed);
                         }
                     }
                     dbCon.Close();
@@ -216,7 +216,7 @@ namespace Globals.CommandModules
                         var reader = await cmd.ExecuteReaderAsync();
                         while (await reader.ReadAsync())
                         {
-                            await Message.PostMessageAsync(ChannelInUse, reader, embed);
+                            await Message.PostToChannelAsync(ChannelInUse, reader, embed);
                         }
                     }
                     dbCon.Close();

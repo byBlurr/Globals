@@ -86,7 +86,7 @@ namespace Globals.Global
                     {
                         if (!user_rank.ToLower().Equals("blacklisted"))
                         {
-                            await PostMessageAsync(message_channel, reader, embed, message_images);
+                            await PostToChannelAsync(message_channel, reader, embed, message_images);
                         }
                     }
 
@@ -153,7 +153,7 @@ namespace Globals.Global
             return message_channel;
         }
 
-        public static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images = null)
+        public static async Task PostToChannelAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images = null)
         {
             if (message_channel.Equals(References.GamingChannel))
             {
@@ -162,30 +162,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            if (message_images != null)
-                            {
-                                if (message_images.Count > 0)
-                                {
-                                    foreach (var attachment in message_images)
-                                    {
-                                        //await (channel as IMessageChannel).SendFileAsync(attachment.Url);
-                                    }
-                                }
-                            }
-                            var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.MusicChannel))
@@ -195,20 +172,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.MovieChannel))
@@ -218,20 +182,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.R6Channel))
@@ -241,20 +192,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.LeagueChannel))
@@ -264,20 +202,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.RustChannel))
@@ -287,20 +212,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.GtaChannel))
@@ -310,20 +222,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.PubgChannel))
@@ -333,20 +232,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.FortniteChannel))
@@ -356,20 +242,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
-                    {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
-                        {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
-                        }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
                 }
             }
             else if (message_channel.Equals(References.ApexChannel))
@@ -379,20 +252,39 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
-                    if (guild != null)
+                    await PostMessageAsync(message_channel, reader, embed, message_images, Id);
+                }
+            }
+        }
+
+        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images, ulong Id)
+        {
+            var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+            if (guild != null)
+            {
+                var channel = guild.GetChannel(Id);
+                if (channel != null)
+                {
+                    var send = Task.Run(async () =>
                     {
-                        var channel = guild.GetChannel(Id);
-                        if (channel != null)
+                        if (message_images != null)
                         {
-                            await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                            if (message_images.Count > 0)
+                            {
+                                foreach (var attachment in message_images)
+                                {
+                                    //await (channel as IMessageChannel).SendFileAsync(attachment.Url);
+                                }
+                            }
                         }
-                        else
-                        {
-                            var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
-                            await Delete.DeleteMessage(message);
-                        }
-                    }
+                        var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                        await Task.Delay(1);
+                    });
+                }
+                else
+                {
+                    var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
+                    await Delete.DeleteMessage(message);
                 }
             }
         }
