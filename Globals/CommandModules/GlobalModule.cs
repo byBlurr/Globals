@@ -169,6 +169,10 @@ namespace Globals.CommandModules
                             await Message.PostToChannelAsync(ChannelInUse, reader, embed);
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("Couldn't find the channel or not in a global channel?");
+                    }
                     dbCon.Close();
                 }
             }

@@ -207,12 +207,19 @@ namespace Globals.Global
                 {
                     var send = Task.Run(async () =>
                     {
-                        if (message_images.Count > 0)
+                        if (message_images != null)
                         {
-                            foreach (string attachment in message_images)
+                            if (message_images.Count > 0)
                             {
-                                var img = await (channel as IMessageChannel).SendFileAsync(attachment, null, false, embed.Build());
-                                Image.DeleteImage(attachment);
+                                foreach (string attachment in message_images)
+                                {
+                                    var img = await (channel as IMessageChannel).SendFileAsync(attachment, null, false, embed.Build());
+                                    Image.DeleteImage(attachment);
+                                }
+                            }
+                            else
+                            {
+                                var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
                             }
                         }
                         else
