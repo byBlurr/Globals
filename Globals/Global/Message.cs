@@ -27,7 +27,19 @@ namespace Globals.Global
             string message_text = Context.Message.Content;
             string message_channel = "";
             string message_footer =  Context.Message.Timestamp.ToString();
-            IReadOnlyCollection<Attachment> message_images = Context.Message.Attachments;
+
+            IReadOnlyCollection<Attachment> message_attachments = Context.Message.Attachments;
+            List<string> message_images = new List<string>();
+            foreach (Attachment attachment in message_attachments)
+            {
+                if (attachment.Filename.EndsWith(".png") || attachment.Filename.EndsWith(".jpg") || attachment.Filename.EndsWith(".jpeg") || attachment.Filename.EndsWith(".gif"))
+                {
+                    message_images.Add(Image.SaveImage(attachment.Filename, attachment.Url));
+                    Console.WriteLine(Image.SaveImage(attachment.Filename, attachment.Url));
+                }
+            }
+
+            if (message_text.Length == 0) message_text = "_Find attachment above._";
 
             string globals_id = "";
 
@@ -154,7 +166,7 @@ namespace Globals.Global
             return message_channel;
         }
 
-        public static async Task PostToChannelAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images = null)
+        public static async Task PostToChannelAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images = null)
         {
 
             for (int i = 0; i < ChannelData.Channels.Count; i++)
@@ -172,7 +184,7 @@ namespace Globals.Global
             }
         }
 
-        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, IReadOnlyCollection<Attachment> message_images, ulong Id)
+        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images, ulong Id)
         {
             var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
             if (guild != null)
@@ -182,17 +194,18 @@ namespace Globals.Global
                 {
                     var send = Task.Run(async () =>
                     {
-                        if (message_images != null)
+                        if (message_images.Count > 0)
                         {
-                            if (message_images.Count > 0)
+                            foreach (string attachment in message_images)
                             {
-                                foreach (var attachment in message_images)
-                                {
-                                    //await (channel as IMessageChannel).SendFileAsync(attachment.Url);
-                                }
+                                var img = await (channel as IMessageChannel).SendFileAsync(attachment, null, false, embed.Build());
+                                Image.DeleteImage(attachment);
                             }
                         }
-                        var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                        else
+                        {
+                            var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                        }
                         await Task.Delay(1);
                     });
                 }
