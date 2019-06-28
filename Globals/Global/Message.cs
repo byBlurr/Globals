@@ -261,13 +261,16 @@ namespace Globals.Global
 
             while (await reader.ReadAsync())
             {
-                if (channel == References.GamingChannel)
+                for (int i = 0; i < ChannelData.Channels.Count; i++)
                 {
-                    var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(2));
-                    if (Channel != null)
+                    if (channel == ChannelData.Channels[i].Id)
                     {
-                        var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
-                        AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        var Channel = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1)).GetTextChannel((ulong)reader.GetInt64(ChannelData.Channels[i].IndexId));
+                        if (Channel != null)
+                        {
+                            var Messages = await Channel.GetMessagesAsync(10).FlattenAsync();
+                            AddMessageToListAsync(Messages, GId, ref MessagesByUser);
+                        }
                     }
                 }
             }
