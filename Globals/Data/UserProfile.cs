@@ -21,10 +21,13 @@ namespace Globals.Data
             if (!reader.HasRows)
             {
                 cmd.Dispose();
-                query = "INSERT INTO user_profiles (user_id, count_servers) VALUES(@userid, @servercount);";
+                query = "INSERT INTO user_profiles (user_id, count_servers, user_bio, user_quote, user_fact) VALUES(@userid, @servercount, @bio, @quote, @fact);";
                 cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@userid", MySqlDbType.Int64).Value = userid;
                 cmd.Parameters.Add("@servercount", MySqlDbType.Int32).Value = 1;
+                cmd.Parameters.Add("@bio", MySqlDbType.String).Value = "Loading...";
+                cmd.Parameters.Add("@quote", MySqlDbType.String).Value = "Loading...";
+                cmd.Parameters.Add("@fact", MySqlDbType.String).Value = "Loading...";
 
                 try
                 {
@@ -235,6 +238,60 @@ namespace Globals.Data
             return CanMod;
         }
 
+        public static async Task<string> GetUserBioAsync(ulong userid, DBConnection dbCon)
+        {
+            string user_bio = "Loading...";
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                user_bio = reader.GetString(8);
+            }
+            cmd.Dispose();
+            reader.Close();
+            return user_bio;
+        }
+
+        public static async Task<string> GetUserQuoteAsync(ulong userid, DBConnection dbCon)
+        {
+            string user_quote = "Loading...";
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                user_quote = reader.GetString(9);
+            }
+            cmd.Dispose();
+            reader.Close();
+            return user_quote;
+        }
+
+        public static async Task<string> GetUserFactAsync(ulong userid, DBConnection dbCon)
+        {
+            string user_fact = "Loading...";
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                user_fact = reader.GetString(10);
+            }
+            cmd.Dispose();
+            reader.Close();
+            return user_fact;
+        }
+
         public static async Task<string> GetGroupAsync(ulong userid, DBConnection dbCon)
         {
             string user_rank = "User";
@@ -307,6 +364,96 @@ namespace Globals.Data
             cmd.Dispose();
             reader.Close();
             return count;
+        }
+
+        public static async Task UpdateUserBioAsync(ulong userid, string bio, DBConnection dbCon)
+        {
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                cmd.Dispose();
+                reader.Close();
+
+                query = "UPDATE user_profiles SET user_bio = @bio WHERE user_id = @userid";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                cmd.Parameters.Add("@bio", MySqlDbType.String).Value = bio;
+
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            cmd.Dispose();
+            reader.Close();
+        }
+
+        public static async Task UpdateUserQuoteAsync(ulong userid, string quote, DBConnection dbCon)
+        {
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                cmd.Dispose();
+                reader.Close();
+
+                query = "UPDATE user_profiles SET user_quote = @quote WHERE user_id = @userid";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                cmd.Parameters.Add("@quote", MySqlDbType.String).Value = quote;
+
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            cmd.Dispose();
+            reader.Close();
+        }
+
+        public static async Task UpdateUserFactAsync(ulong userid, string fact, DBConnection dbCon)
+        {
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                cmd.Dispose();
+                reader.Close();
+
+                query = "UPDATE user_profiles SET user_fact = @fact WHERE user_id = @userid";
+                cmd = new MySqlCommand(query, dbCon.Connection);
+                cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+                cmd.Parameters.Add("@fact", MySqlDbType.String).Value = fact;
+
+                try
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            cmd.Dispose();
+            reader.Close();
         }
     }
 }
