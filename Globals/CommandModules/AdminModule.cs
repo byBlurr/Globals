@@ -52,7 +52,7 @@ namespace Globals.CommandModules
                 embed.WithCurrentTimestamp();
 
                 var Message = await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                await Delete.DeleteMessage(Message);
+                await Delete.DeleteMessage(Message, 20000);
 
                 dbCon.Close();
             }

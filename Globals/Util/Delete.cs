@@ -8,7 +8,7 @@ namespace Globals.Util
 {
     class Delete
     {
-        public static async Task DeleteMessage(IUserMessage Message, int Time = 5000)
+        public static async Task DeleteMessage(IUserMessage Message, int Time = 10000)
         {
             var delete = Task.Run(async () =>
             {
