@@ -97,7 +97,10 @@ namespace Globals.CommandModules
             await Context.Message.DeleteAsync();
             var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
             embed.WithTitle("Globals Developer");
-            embed.WithDescription("Global Bot was developed by Blurr Development and VerdillianStudios, for Discord Hack Week 2019. Development of Global Bot started on the 24th June 2019.");
+            embed.WithDescription("Global Bot was developed by Blurr Development and VerdillianStudios, for Discord Hack Week 2019.\n\n" +
+                "**Blurr Development Github:** http://github.blurrdev.com \n" +
+                "**VerdillianStufios Github:** http://verdillian.blurrdev.com \n" +
+                "**Order Using Fiverr:** http://fiverr.blurrdev.com \n");
             embed.WithUrl("https://github.com/byBlurr");
             embed.WithThumbnailUrl("https://avatars2.githubusercontent.com/u/20552533?s=460&v=4");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
