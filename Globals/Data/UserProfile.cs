@@ -25,9 +25,9 @@ namespace Globals.Data
                 cmd = new MySqlCommand(query, dbCon.Connection);
                 cmd.Parameters.Add("@userid", MySqlDbType.Int64).Value = userid;
                 cmd.Parameters.Add("@servercount", MySqlDbType.Int32).Value = 1;
-                cmd.Parameters.Add("@bio", MySqlDbType.String).Value = "Loading...";
-                cmd.Parameters.Add("@quote", MySqlDbType.String).Value = "Loading...";
-                cmd.Parameters.Add("@fact", MySqlDbType.String).Value = "Loading...";
+                cmd.Parameters.Add("@bio", MySqlDbType.String).Value = "`!bio <bio_to_set>`";
+                cmd.Parameters.Add("@quote", MySqlDbType.String).Value = "`!quote <quote_to_set>`";
+                cmd.Parameters.Add("@fact", MySqlDbType.String).Value = "`!fact <fact_to_set>`";
 
                 try
                 {
