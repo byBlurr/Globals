@@ -140,8 +140,8 @@ namespace Globals.CommandModules
             }
             else
             {
-                var message = await Context.Channel.SendMessageAsync("We couldn't find the globals category in your server, I suggest deleting all the global channels and category. Then run the `!setup` command again.");
-                await Delete.DeleteMessage(message);
+                var message = await Context.Channel.SendMessageAsync("We couldn't find the globals category in your server, I suggest deleting all the global channels and category. Then run the `!create` command.");
+                await Delete.DeleteMessage(message, 25000);
             }
         }
     }
