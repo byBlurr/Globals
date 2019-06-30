@@ -117,8 +117,11 @@ namespace Globals.CommandModules
                         embed.WithCurrentTimestamp();
                         await Channel.SendMessageAsync("", false, embed.Build());
 
-                        var message = await Context.Channel.SendMessageAsync("Thank you for your suggestion, out team will now look into it and get back to you!");
-                        await Delete.DeleteMessage(message);
+                        //var message = await Context.Channel.SendMessageAsync("Thank you for your suggestion, out team will now look into it and get back to you!");
+                        //await Delete.DeleteMessage(message);
+
+                        embed.WithAuthor("You made a request.");
+                        await Context.User.SendMessageAsync(null, false, embed.Build());
                     }
                 }
                 else
