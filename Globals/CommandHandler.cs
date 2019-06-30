@@ -100,7 +100,7 @@ namespace Globals
 
         private async Task UpdateStatus()
         {
-            await bot.SetGameAsync("Connecting " + bot.Guilds.Count + " communities.");
+            await bot.SetGameAsync(bot.Guilds.Count + " communities connect.", null, ActivityType.Watching);
             await bot.SetStatusAsync(UserStatus.Idle);
         }
 
