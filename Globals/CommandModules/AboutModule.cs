@@ -9,6 +9,27 @@ namespace Globals.CommandModules
 {
     public class AboutModule : ModuleBase
     {
+        [Command("servers")]
+        [Alias("allservers", "listservers", "serverlist", "guilds")]
+        public async Task ServerListAsync()
+        {
+            await Context.Message.DeleteAsync();
+
+            string serverlist = "";
+            var guilds = CommandHandler.GetBot().Guilds;
+            foreach (var guild in guilds)
+            {
+                serverlist = serverlist + "\n- " + guild.Name.ToString();
+            }
+
+            var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+            embed.WithTitle("All Global Servers");
+            embed.WithDescription(serverlist);
+            embed.WithUrl("http://globalbot.blurrdev.com");
+            embed.WithFooter("Invite Global Bot to your server by clicking the title!");
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
+        }
+
         [Command("invite")]
         [Alias("inv")]
         public async Task InviteAsync()
