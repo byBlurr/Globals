@@ -96,6 +96,7 @@ namespace Globals.CommandModules
                 "-    `!request <feature>` - Suggest new features for the global chat or Discord server, remember to be descriptive! We may message you for more information.\n" +
                 "\n**Other Commands**\nOther commands for you to try out\n" +
                 "-    `!help` - Brings up this message derp...\n" +
+                "-    `!guilds` - Lists all global servers.\n" +
                 "-    `!invite` - Invite the bot to your server.\n" +
                 "-    `!server` - Join the Globals Discord server.\n" +
                 "-    `!rules` - Displays the global chat rules.\n" +
