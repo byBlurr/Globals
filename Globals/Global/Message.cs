@@ -25,6 +25,7 @@ namespace Globals.Global
             string user_image = Context.User.GetAvatarUrl();
 
             string message_text = Context.Message.Content;
+            IReadOnlyCollection<SocketUser> message_mentions = Context.Message.MentionedUsers;
             string message_channel = "";
             string message_footer =  Context.Message.Timestamp.ToString();
 
@@ -99,7 +100,7 @@ namespace Globals.Global
                     {
                         if (!user_rank.ToLower().Equals("blacklisted"))
                         {
-                            await PostToChannelAsync(message_channel, reader, embed, message_images);
+                            await PostToChannelAsync(message_channel, reader, embed, message_images, message_mentions);
                         }
                     }
 
@@ -179,7 +180,7 @@ namespace Globals.Global
             return message_channel;
         }
 
-        public static async Task PostToChannelAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images = null)
+        public static async Task PostToChannelAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images = null, IReadOnlyCollection<SocketUser> message_mentions = null)
         {
 
             for (int i = 0; i < ChannelData.Channels.Count; i++)
@@ -191,13 +192,13 @@ namespace Globals.Global
 
                     if (Enabled == 1)
                     {
-                        await PostMessageAsync(message_channel, reader, embed, message_images, Id);
+                        await PostMessageAsync(message_channel, reader, embed, message_images, message_mentions, Id);
                     }
                 }
             }
         }
 
-        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images, ulong Id)
+        private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images, IReadOnlyCollection<SocketUser> message_mentions, ulong Id)
         {
             var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
             if (guild != null)
@@ -219,14 +220,14 @@ namespace Globals.Global
                             }
                             else
                             {
-                                var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                                await SendMessageAsync(guild, embed, message_mentions, channel);
                             }
                         }
                         else
                         {
-                            var message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+                            await SendMessageAsync(guild, embed, message_mentions, channel);
                         }
-                        await Task.Delay(1);
+                        await Task.Delay(10);
                     });
                 }
                 else
@@ -234,6 +235,31 @@ namespace Globals.Global
                     var message = await guild.Owner.SendMessageAsync("It appears there is an issue with finding the '" + message_channel + "` channel on your server. Try deleting the servers and then running the create command again.");
                     await Delete.DeleteMessage(message);
                 }
+            }
+        }
+
+        private static async Task SendMessageAsync(SocketGuild guild, EmbedBuilder embed, IReadOnlyCollection<SocketUser> message_mentions, SocketGuildChannel channel)
+        {
+            IUserMessage message = await (channel as IMessageChannel).SendMessageAsync(null, false, embed.Build());
+            if (message_mentions.Count > 0)
+            {
+                var sendMentions = Task.Run(async () =>
+                {
+                    string mentions = "";
+                    foreach (var user in message_mentions)
+                    {
+                        if (guild.GetUser(user.Id) != null)
+                        {
+                            mentions = mentions + " " + user.Mention;
+                        }
+                    }
+                    if (mentions.Length > 0)
+                    {
+                        var mention = await (channel as IMessageChannel).SendMessageAsync(mentions);
+                        await Task.Delay(100);
+                        await mention.DeleteAsync();
+                    }
+                });
             }
         }
 
