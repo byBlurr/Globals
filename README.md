@@ -5,7 +5,8 @@
 [LinkedIn Profile](http://linkedin.blurrdev.com) | 
 [Fiverr Services](http://fiverr.blurrdev.com) | 
 [Join Globals Server](http://globals.blurrdev.com) | 
-[Invite Global Bot](http://globalbot.blurrdev.com)
+[Invite Global Bot](http://globalbot.blurrdev.com) | 
+[Donate Towards The Project](http://donate.blurrdev.com)
 
 ## About Globals
 Global Bot aims to bring different communities closer. Global chats are a good way to find new team mates, people to play against or good to chat with new people.
