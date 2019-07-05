@@ -4,9 +4,6 @@ using Discord.Commands;
 using Globals.Channels;
 using Globals.Data;
 using Globals.Util;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Globals.CommandModules

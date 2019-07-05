@@ -1,10 +1,7 @@
 ﻿using Data;
 using Discord;
-using Globals.Global;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Globals.Data

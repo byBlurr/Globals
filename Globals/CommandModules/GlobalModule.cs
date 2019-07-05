@@ -57,6 +57,50 @@ namespace Globals.CommandModules
             }
         }
 
+        [Command("replace")]
+        public async Task ReplaceLastAsync(string replacee = "", string replacement = "")
+        {
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+
+            if (dbCon.IsConnect())
+            {
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+
+                if (!ChannelInUse.Equals(""))
+                {
+                    if (!replacee.Equals("") && !replacement.Equals("") && !ProfanityFilter.HasProfanity(replacement))
+                    {
+                        await Context.Message.DeleteAsync();
+
+                        var messages = Message.GetMessageByUserAsync(Context.User, dbCon, ChannelInUse).Result;
+
+                        var remove = Task.Run(async () =>
+                        {
+                            foreach (var message in messages)
+                            {
+                                if (message != null)
+                                {
+                                    foreach (var embed in message.Embeds)
+                                    {
+                                        string newtext = embed.Description.Replace(replacee, replacement);
+                                        await (message as IUserMessage).ModifyAsync(x => x.Embed = embed.ToEmbedBuilder().WithDescription(newtext + " _- edited._").Build());
+                                        await Task.Delay(1100);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        var message = await Context.Channel.SendMessageAsync("Correct format of this command is `!edit <new text>`, for example `!edit Pokemon GO is my jam on toast.`.");
+                        await Delete.DeleteMessage(message);
+                    }
+                }
+                dbCon.Close();
+            }
+        }
+
         [Command("delete")]
         [Alias("del")]
         public async Task DeleteLastAsync()

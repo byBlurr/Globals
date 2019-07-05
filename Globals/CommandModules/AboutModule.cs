@@ -88,6 +88,7 @@ namespace Globals.CommandModules
                 "-    `!update` - Will delete and create the added or removed channels, make sure you do this everytime you add or remove channels.\n" +
                 "\n**Global Commands**\nCommands that are only available in the global channels.\n" +
                 "-    `!edit <new_message>` - Edit your last message with the new text.\n" +
+                "-    `!replace <word> <new_word>` - Replace a word in your last message, easier way to fix typoes than `!edit`" +
                 "-    `!delete` - Delete your last message.\n" +
                 "-    `!bio <bio>` - Set a bio for your profile.\n" +
                 "-    `!quote <quote>` - Add your favourite quote to your profile.\n" +
