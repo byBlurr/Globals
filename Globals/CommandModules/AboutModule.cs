@@ -101,9 +101,11 @@ namespace Globals.CommandModules
                 "-    `!invite` - Invite the bot to your server.\n" +
                 "-    `!server` - Join the Globals Discord server.\n" +
                 "-    `!rules` - Displays the global chat rules.\n" +
-                "-    `!developer` - Will give you information on the developers of Globals.\n" +
                 "-    `!about` - Will tell you a little about Globals.\n" +
                 "-    `!donate` - Will give you information on how you can support Globals!\n" +
+                "-    `!developer` - Will give you information on the developers of Globals.\n" +
+                "-    `!blurr` - Will give you information about Blurr Development.\n" +
+                "-    `!verdillian` - Will give you information about VerdillianStudios.\n" +
                 "\n**Moderation Commands**\nCommands for Global Moderators\n" +
                 "-    `!war...` - Wait you don't need to know these! You will be told these, if you become a global moderator!\n\n" +
                 "\n**More Information**\n" +
