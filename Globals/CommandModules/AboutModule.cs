@@ -122,7 +122,7 @@ namespace Globals.CommandModules
             embed.WithTitle("Globals Developer");
             embed.WithDescription("Global Bot was developed by Blurr Development and VerdillianStudios, for Discord Hack Week 2019.\n\n" +
                 "**Blurr Development Github:** http://github.blurrdev.com \n" +
-                "**VerdillianStufios Github:** http://verdillian.blurrdev.com \n" +
+                "**VerdillianStudios Github:** http://verdillian.blurrdev.com \n" +
                 "**Order Using Fiverr:** http://fiverr.blurrdev.com \n");
             embed.WithUrl("https://github.com/byBlurr");
             embed.WithThumbnailUrl("https://avatars2.githubusercontent.com/u/20552533?s=460&v=4");
@@ -141,6 +141,34 @@ namespace Globals.CommandModules
             embed.WithUrl("https://paypal.me/pools/c/8fZ8flHgt5");
             embed.WithImageUrl("https://cdn.discordapp.com/attachments/587411637363802135/593832015065776138/0.jpg");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
+
+        [Command("blurrdev")]
+        [Alias("bd", "blurr")]
+        public async Task BlurrAsync()
+        {
+            await Context.Message.DeleteAsync();
+
+            var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+            embed.WithTitle("About Blurr Development");
+            embed.WithDescription("**Github:** http://github.blurrdev.com\n" +
+                "**Fiverr:** http://fiverr.blurrdev.com\n" +
+                "**linkedin:** http://linkedin.blurrdev.com\n\n" +
+                "Currently working mostly on Discord bots and windows applications, but with experience in game development. Contact through Fiverr for quotes.");
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
+        }
+
+        [Command("verdillian")]
+        [Alias("vs", "verdillianstudios", "verdillian studios")]
+        public async Task VerdillianAsync()
+        {
+            await Context.Message.DeleteAsync();
+
+            var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
+            embed.WithTitle("About Verdillian Studios");
+            embed.WithDescription("**Github:** http://verdillian.blurrdev.com\n" +
+                "");
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
     }
 }
