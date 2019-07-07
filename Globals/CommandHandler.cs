@@ -30,9 +30,38 @@ namespace Globals
 
             bot.Ready += ReadyAsync;
             bot.MessageReceived += HandleCommandAsync;
+            bot.UserIsTyping += HandleTypingAsync;
             //bot.MessageReceived += HandleGlobalMessageAsync;
 
             commands = map.GetService<CommandService>();
+        }
+
+        private async Task HandleTypingAsync(SocketUser User, ISocketMessageChannel Channel)
+        {
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+            if (dbCon.IsConnect())
+            {
+                ulong GuildId = (Channel as IGuildChannel).GuildId;
+                var global_channel = await Message.GetGlobalChannelInUseAsync(GuildId, Channel.Id, dbCon);
+
+                if (!global_channel.Equals(""))
+                {
+                    if (!ChannelData.GetTypingState(global_channel))
+                    {
+                        ChannelData.UpdateTypingState(global_channel, true);
+                        await Message.TriggerTypingAsync(global_channel, dbCon);
+
+                        var CancelType = Task.Run(async () =>
+                        {
+                            await Task.Delay(10000);
+                            ChannelData.UpdateTypingState(global_channel, false);
+                        });
+                    }
+                }
+
+                dbCon.Close();
+            }
         }
 
         private async Task HandleJoinGuildAsync(SocketGuild guild)

@@ -22,7 +22,7 @@ namespace Globals.CommandModules
 
             if (dbCon.IsConnect())
             {
-                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                 if (!ChannelInUse.Equals(""))
                 {
@@ -65,7 +65,7 @@ namespace Globals.CommandModules
 
             if (dbCon.IsConnect())
             {
-                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                 if (!ChannelInUse.Equals(""))
                 {
@@ -110,7 +110,7 @@ namespace Globals.CommandModules
 
             if (dbCon.IsConnect())
             {
-                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                 if (!ChannelInUse.Equals(""))
                 {
@@ -145,7 +145,7 @@ namespace Globals.CommandModules
 
             if (dbCon.IsConnect())
             {
-                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+                string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                 if (!ChannelInUse.Equals(""))
                 {
@@ -186,7 +186,7 @@ namespace Globals.CommandModules
                 dbCon.DatabaseName = BotConfig.Load().DatabaseName;
                 if (dbCon.IsConnect())
                 {
-                    string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+                    string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                     if (!ChannelInUse.Equals(""))
                     {
@@ -244,7 +244,7 @@ namespace Globals.CommandModules
                 dbCon.DatabaseName = BotConfig.Load().DatabaseName;
                 if (dbCon.IsConnect())
                 {
-                    string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context, dbCon);
+                    string ChannelInUse = await Message.GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                     if (!ChannelInUse.Equals(""))
                     {

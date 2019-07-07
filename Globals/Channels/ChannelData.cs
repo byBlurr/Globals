@@ -1,4 +1,5 @@
 ﻿using Data;
+using Globals.Global;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,15 @@ namespace Globals.Channels
     class ChannelData
     {
         public static List<GlobalChannel> Channels = new List<GlobalChannel>();
+        public static List<TypingState> TypingStates = new List<TypingState>();
 
         public static void AddChannel(string name, string id, int indexToggle, int indexId)
         {
             GlobalChannel chan = new GlobalChannel(name, id, indexToggle, indexId);
             Channels.Add(chan);
+
+            TypingState state = new TypingState(id, false);
+            TypingStates.Add(state);
         }
 
         public static void PopulateChannels()
@@ -39,6 +44,26 @@ namespace Globals.Channels
             }
 
             Console.WriteLine("Populated the channel list.");
+        }
+
+        public static bool GetTypingState(string channel_name)
+        {
+            foreach (TypingState state in TypingStates)
+            {
+                if (state.Channel.ToLower().Equals(channel_name.ToLower())) return state.State;
+            }
+            return false;
+        }
+
+        public static void UpdateTypingState(string channel_name, bool triggered)
+        {
+            foreach (TypingState state in TypingStates)
+            {
+                if (state.Channel.ToLower().Equals(channel_name.ToLower()))
+                {
+                    state.State = triggered;
+                }
+            }
         }
     }
 }

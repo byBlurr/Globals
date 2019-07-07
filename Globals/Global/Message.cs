@@ -48,7 +48,7 @@ namespace Globals.Global
             dbCon.DatabaseName = BotConfig.Load().DatabaseName;
             if (dbCon.IsConnect())
             {
-                message_channel = await GetGlobalChannelInUseAsync(Context, dbCon);
+                message_channel = await GetGlobalChannelInUseAsync(Context.Guild.Id, Context.Channel.Id, dbCon);
 
                 if (!message_channel.Equals(""))
                 {
@@ -88,7 +88,7 @@ namespace Globals.Global
                 if (!message_channel.Equals(""))
                 {
                     var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
-                    embed.WithAuthor(user_name + " from " + user_server, user_image);
+                    embed.WithAuthor(user_name + "#" + Context.User.Discriminator + " from " + user_server, user_image);
                     embed.WithDescription(message_text);
                     embed.WithFooter(user_rank + " - " + globals_id + " | " + message_footer);
 
@@ -112,6 +112,51 @@ namespace Globals.Global
             }
             else Console.WriteLine("Couldnt connect...");
 
+        }
+
+        public static async Task TriggerTypingAsync(string message_channel, DBConnection dbCon)
+        {
+            // TODO: Do this func
+
+            string query = "SELECT * FROM server_configs;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                for (int i = 0; i < ChannelData.Channels.Count; i++)
+                {
+                    if (message_channel.Equals(ChannelData.Channels[i].Id))
+                    {
+                        var Enabled = reader.GetInt32(ChannelData.Channels[i].IndexToggle);
+                        var Id = (ulong)reader.GetInt64(ChannelData.Channels[i].IndexId);
+
+                        if (Enabled == 1)
+                        {
+                            var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
+                            if (guild != null)
+                            {
+                                var channel = guild.GetTextChannel(Id);
+                                if (channel != null)
+                                {
+                                    await channel.TriggerTypingAsync();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ERROR: Couldn't find the channel.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("ERROR: Couldn't find the guild.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            reader.Close();
+            cmd.Dispose();
         }
 
         public static async Task DeleteAsync(IUser User, DBConnection dbCon)
@@ -162,17 +207,18 @@ namespace Globals.Global
             });
         }
 
-        public static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
+        //public static async Task<string> GetGlobalChannelInUseAsync(ICommandContext Context, DBConnection dbCon)
+        public static async Task<string> GetGlobalChannelInUseAsync(ulong GuildId, ulong ChannelId, DBConnection dbCon)
         {
             string message_channel = "";
             string query = "SELECT * FROM server_configs WHERE server_id = @serverid";
             var cmd = new MySqlCommand(query, dbCon.Connection);
-            cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = Context.Guild.Id;
+            cmd.Parameters.Add("@serverid", MySqlDbType.UInt64).Value = GuildId;
 
             DbDataReader reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
-                if (message_channel.Equals("")) CheckChannel(ref message_channel, Context, reader);
+                if (message_channel.Equals("")) CheckChannel(ref message_channel, ChannelId, reader);
             }
 
             cmd.Dispose();
@@ -200,6 +246,7 @@ namespace Globals.Global
 
         private static async Task PostMessageAsync(string message_channel, DbDataReader reader, EmbedBuilder embed, List<string> message_images, IReadOnlyCollection<SocketUser> message_mentions, ulong Id)
         {
+            ChannelData.UpdateTypingState(message_channel, false);
             var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
             if (guild != null)
             {
@@ -263,7 +310,7 @@ namespace Globals.Global
             }
         }
 
-        private static void CheckChannel(ref string message_channel, ICommandContext Context, DbDataReader reader)
+        private static void CheckChannel(ref string message_channel, ulong ChannelId, DbDataReader reader)
         {
             for (int i = 0; i < ChannelData.Channels.Count; i++)
             {
@@ -272,7 +319,7 @@ namespace Globals.Global
 
                 if (Enabled == 1)
                 {
-                    if (Id == Context.Channel.Id)
+                    if (Id == ChannelId)
                     {
                         message_channel = ChannelData.Channels[i].Id;
                     }
