@@ -114,7 +114,7 @@ namespace Globals.Global
 
         }
 
-        public static async Task TriggerTypingAsync(string message_channel, DBConnection dbCon)
+        public static async Task TriggerTypingAsync(ulong original_channel, string message_channel, DBConnection dbCon)
         {
             // TODO: Do this func
 
@@ -131,7 +131,7 @@ namespace Globals.Global
                         var Enabled = reader.GetInt32(ChannelData.Channels[i].IndexToggle);
                         var Id = (ulong)reader.GetInt64(ChannelData.Channels[i].IndexId);
 
-                        if (Enabled == 1)
+                        if (Enabled == 1 && Id != original_channel)
                         {
                             var guild = CommandHandler.GetBot().GetGuild((ulong)reader.GetInt64(1));
                             if (guild != null)

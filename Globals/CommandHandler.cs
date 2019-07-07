@@ -50,7 +50,7 @@ namespace Globals
                     if (!ChannelData.GetTypingState(global_channel))
                     {
                         ChannelData.UpdateTypingState(global_channel, true);
-                        await Message.TriggerTypingAsync(global_channel, dbCon);
+                        await Message.TriggerTypingAsync(Channel.Id, global_channel, dbCon);
 
                         var CancelType = Task.Run(async () =>
                         {
