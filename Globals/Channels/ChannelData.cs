@@ -46,6 +46,26 @@ namespace Globals.Channels
             Console.WriteLine("Populated the channel list.");
         }
 
+        public static GlobalChannel FindChannelById(string channel_id)
+        {
+            foreach (GlobalChannel channel in Channels)
+            {
+                if (channel.Id == channel_id) return channel;
+            }
+
+            return null;
+        }
+
+        public static GlobalChannel FindChannelByName(string channel_name)
+        {
+            foreach (GlobalChannel channel in Channels)
+            {
+                if (channel.Name == channel_name) return channel;
+            }
+
+            return null;
+        }
+
         public static bool GetTypingState(string channel_name)
         {
             foreach (TypingState state in TypingStates)

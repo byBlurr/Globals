@@ -235,6 +235,26 @@ namespace Globals.Data
             return CanMod;
         }
 
+        public static bool CanAdministrate(ulong userid, DBConnection dbCon)
+        {
+            bool CanAdmin = false;
+
+            string query = "SELECT * FROM user_profiles WHERE user_id = @userid;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            cmd.Parameters.Add("@userid", MySqlDbType.UInt64).Value = userid;
+            var reader = cmd.ExecuteReader();
+
+            while (reader.Read() && CanAdmin == false)
+            {
+                if (reader.GetInt32(1) == 1) CanAdmin = true;
+                else CanAdmin = false;
+            }
+            cmd.Dispose();
+            reader.Close();
+
+            return CanAdmin;
+        }
+
         public static async Task<string> GetUserBioAsync(ulong userid, DBConnection dbCon)
         {
             string user_bio = "Loading...";

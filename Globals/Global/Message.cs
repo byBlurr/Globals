@@ -27,7 +27,7 @@ namespace Globals.Global
             string message_text = Context.Message.Content;
             IReadOnlyCollection<SocketUser> message_mentions = Context.Message.MentionedUsers;
             string message_channel = "";
-            string message_footer =  Context.Message.Timestamp.ToString();
+            string message_footer = Context.Message.Timestamp.ToString();
 
             IReadOnlyCollection<Attachment> message_attachments = Context.Message.Attachments;
             List<string> message_images = new List<string>();
@@ -112,6 +112,21 @@ namespace Globals.Global
             }
             else Console.WriteLine("Couldnt connect...");
 
+        }
+
+        public static async Task PostGlobalAnnouncementAsync(EmbedBuilder embed, GlobalChannel channel, DBConnection dbCon)
+        {
+            string query = "SELECT * FROM server_configs;";
+            var cmd = new MySqlCommand(query, dbCon.Connection);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                await PostToChannelAsync(channel.Id, reader, embed, null, null);
+            }
+
+            reader.Close();
+            cmd.Dispose();
         }
 
         public static async Task TriggerTypingAsync(ulong original_channel, string message_channel, DBConnection dbCon)

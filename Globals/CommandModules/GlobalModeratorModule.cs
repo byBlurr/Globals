@@ -1,8 +1,10 @@
 ﻿using Data;
 using Discord;
 using Discord.Commands;
+using Globals.Channels;
 using Globals.Data;
 using Globals.Global;
+using Globals.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +14,39 @@ namespace Globals.CommandModules
 {
     public class GlobalModeratorModule : ModuleBase
     {
+        [Command("announce")]
+        public async Task AnnounceAsync([Remainder] string Announcement = null)
+        {
+            if (Announcement != null && Announcement.Length > 0)
+            {
+                var dbCon = DBConnection.Instance();
+                dbCon.DatabaseName = BotConfig.Load().DatabaseName;
+                if (dbCon.IsConnect())
+                {
+                    if (UserProfile.CanAdministrate(Context.User.Id, dbCon))
+                    {
+                        await Context.Message.DeleteAsync();
+
+                        GlobalChannel GeneralChannel = ChannelData.FindChannelById("general");
+                        if (GeneralChannel != null)
+                        {
+                            var embed = new EmbedBuilder() { Color = new Color() };
+                            embed.WithTitle("Global Announcement");
+                            embed.WithDescription(Announcement);
+                            embed.WithFooter("Global announcement by " + Context.User.Username + " at " + DateTime.UtcNow.ToShortTimeString());
+                            await Message.PostGlobalAnnouncementAsync(embed, GeneralChannel, dbCon);
+                        }
+                        else
+                        {
+                            var Message = await Context.Channel.SendMessageAsync("Announcement failed. General chat could not be found?");
+                            await Delete.DeleteMessage(Message);
+                        }
+                    }
+                    dbCon.Close();
+                }
+            }
+        }
+
         [Command("warn")]
         public async Task WarnUserAsync(IUser User = null)
         {
