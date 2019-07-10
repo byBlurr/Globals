@@ -117,6 +117,7 @@ namespace Globals.CommandModules
                 "-    `!rules` - Displays the global chat rules.\n" +
                 "-    `!about` - Will tell you a little about Globals.\n" +
                 "-    `!donate` - Will give you information on how you can support Globals!\n" +
+                "-    `!changelog` - Will post the latest changelog and version information.\n" +
                 "-    `!developer` - Will give you information on the developers of Globals.\n" +
                 "-    `!blurr` - Will give you information about Blurr Development.\n" +
                 "-    `!verdillian` - Will give you information about VerdillianStudios.\n" +
