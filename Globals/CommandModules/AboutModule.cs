@@ -1,9 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using Globals.Util;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Globals.CommandModules
@@ -16,9 +13,15 @@ namespace Globals.CommandModules
         {
             await Context.Message.DeleteAsync();
 
+            string title = References.NAME + " " + References.VERSION + " - " + References.DATE;
+            string changelog = "";
+            if (References.TITLE.Length > 0) changelog = "**" + References.TITLE + "**\n" + References.CHANGELOG;
+            else changelog = References.CHANGELOG;
+
             EmbedBuilder embed = new EmbedBuilder() { };
-            embed.WithTitle(References.NAME + " " + References.VERSION + " - " + References.DATE);
-            embed.WithDescription(References.CHANGELOG);
+            embed.WithTitle(title);
+            embed.WithDescription(changelog);
+            embed.WithFooter(References.FOOTER);
             embed.WithColor(new Color(114, 137, 218));
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
