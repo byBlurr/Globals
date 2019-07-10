@@ -153,7 +153,7 @@ namespace Globals.CommandModules
                     {
                         await Context.Message.DeleteAsync();
 
-                        var Channel = CommandHandler.GetBot().GetGuild(References.GlobalsServerId).GetChannel(References.RequestChannelId) as IMessageChannel;
+                        var Channel = CommandHandler.GetBot().GetGuild(References.SERVERID).GetChannel(References.REQUESTCHANNELID) as IMessageChannel;
 
                         var embed = new EmbedBuilder() { Color = new Color(114, 137, 218) };
                         embed.WithAuthor(Context.User.Username + "#" + Context.User.DiscriminatorValue + " from " + Context.Guild.Name, Context.User.GetAvatarUrl());

@@ -17,8 +17,8 @@ namespace Globals.CommandModules
             await Context.Message.DeleteAsync();
 
             EmbedBuilder embed = new EmbedBuilder() { };
-            embed.WithTitle("Global Chat " + References.Version + " - " + References.VersionDate);
-            embed.WithDescription(References.Changelog);
+            embed.WithTitle(References.NAME + " " + References.VERSION + " - " + References.DATE);
+            embed.WithDescription(References.CHANGELOG);
             embed.WithColor(new Color(114, 137, 218));
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
