@@ -11,7 +11,7 @@ namespace Globals.CommandModules
     public class AboutModule : ModuleBase
     {
         [Command("changelog")]
-        [Alias("update", "updatelog")]
+        [Alias("update", "updatelog", "version")]
         public async Task ChangelogAsync()
         {
             await Context.Message.DeleteAsync();
@@ -45,7 +45,7 @@ namespace Globals.CommandModules
         }
 
         [Command("invite")]
-        [Alias("inv")]
+        [Alias("inv", "bot")]
         public async Task InviteAsync()
         {
             await Context.Message.DeleteAsync();
@@ -58,7 +58,7 @@ namespace Globals.CommandModules
         }
 
         [Command("about")]
-        [Alias("?", "server", "supportserver")]
+        [Alias("?", "server", "supportserver", "guild")]
         public async Task AboutAsync()
         {
             await Context.Message.DeleteAsync();
@@ -72,6 +72,7 @@ namespace Globals.CommandModules
         }
 
         [Command("rules")]
+        [Alias("rule")]
         public async Task RulesAsync()
         {
             await Context.Message.DeleteAsync();
@@ -89,6 +90,7 @@ namespace Globals.CommandModules
         }
 
         [Command("help")]
+        [Alias("?")]
         public async Task HelpAsync()
         {
             await Context.Message.DeleteAsync();
@@ -131,7 +133,7 @@ namespace Globals.CommandModules
         }
 
         [Command("developer")]
-        [Alias("dev")]
+        [Alias("dev", "programmer")]
         public async Task DeveloperAsync()
         {
             await Context.Message.DeleteAsync();
@@ -147,7 +149,7 @@ namespace Globals.CommandModules
         }
 
         [Command("donate")]
-        [Alias("fund", "support")]
+        [Alias("fund", "support", "finance")]
         public async Task DonateAsync()
         {
             await Context.Message.DeleteAsync();
@@ -176,7 +178,7 @@ namespace Globals.CommandModules
         }
 
         [Command("verdillian")]
-        [Alias("vs", "verdillianstudios", "verdillian studios")]
+        [Alias("vs", "verdillianstudios", "verdillian studios", "knight")]
         public async Task VerdillianAsync()
         {
             await Context.Message.DeleteAsync();
