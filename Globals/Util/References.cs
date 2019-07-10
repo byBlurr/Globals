@@ -15,7 +15,8 @@ namespace Globals.Util
         public static string TITLE = ""; // Leave blank if it isn't a update worthy of a title.
         public static string CHANGELOG =    "- See when someone is typing in a global channel.\n" +
                                             "- Global Founders can now make announcements to the general channel.\n" +
-                                            "- Added the changelog command.\n" +
+                                            "- Images will now be within the embed!\n" +
+                                            "- Use the `!changelog` command to view the latest changelog.\n" +
                                             "";
         public static string FOOTER = "Make requests for future updates with `!request <idea>`";
     }

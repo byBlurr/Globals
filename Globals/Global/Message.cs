@@ -40,7 +40,7 @@ namespace Globals.Global
                 }
             }
 
-            if (message_text.Length == 0) message_text = "_Find attachment above._";
+            //if (message_text.Length == 0) message_text = "_Find attachment above._";
 
             string globals_id = "";
 
@@ -276,7 +276,9 @@ namespace Globals.Global
                             {
                                 foreach (string attachment in message_images)
                                 {
-                                    var img = await (channel as IMessageChannel).SendFileAsync(attachment, null, false, embed.Build());
+                                    //var img = await (channel as IMessageChannel).SendFileAsync(attachment, null, false, embed.Build());
+                                    embed.WithImageUrl(Image.GetImageUrl(attachment));
+                                    await SendMessageAsync(guild, embed, message_mentions, channel);
                                     Image.DeleteImage(attachment);
                                 }
                             }

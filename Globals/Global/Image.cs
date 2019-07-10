@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Discord;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -26,6 +27,22 @@ namespace Globals.Global
             }
 
             return dir + filename;
+        }
+
+        public static string GetImageUrl(string file)
+        {
+            if (File.Exists(file))
+            {
+                var message = (CommandHandler.GetBot().GetUser(376841246955667459) as IUser).SendFileAsync(file);
+                foreach (var attachment in message.Result.Attachments)
+                {
+                    return attachment.Url;
+                }
+            }
+
+            // If it makes it out, we have an error... oopsie
+            Console.WriteLine("The image failed...");
+            return null;
         }
 
         public static void DeleteImage(string file)
