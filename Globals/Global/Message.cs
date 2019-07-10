@@ -190,20 +190,10 @@ namespace Globals.Global
                             {
                                 if (embed != null)
                                 {
-                                    /*if (MessagesToRemove[i].Attachments.Count > 0)
-                                    {
-                                        Console.WriteLine("DOES THIS EVEN WORK BRUV?!?");
-                                        var chan = MessagesToRemove[i].Channel;
-
-                                        await MessagesToRemove[i].DeleteAsync();
-                                        var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
-                                        await chan.SendMessageAsync(null, false, emb);
-                                    }
-                                    else
-                                    {*/
-                                        var emb = embed.ToEmbedBuilder().WithDescription("").WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString()).Build();
-                                        await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb);
-                                    //}
+                                    var emb = new EmbedBuilder() { Color = embed.Color};
+                                    emb.WithAuthor(embed.Author.Value.Name, embed.Author.Value.IconUrl, embed.Author.Value.Url);
+                                    emb.WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString());
+                                    await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb.Build());
 
                                     await Task.Delay(1100);
                                 }
