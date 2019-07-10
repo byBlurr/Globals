@@ -16,6 +16,7 @@ namespace Globals.Util
         public static readonly string CHANGELOG =    "- See when someone is typing in a global channel.\n" +
                                             "- Global Founders can now make announcements to the general channel.\n" +
                                             "- Images will now be within the embed!\n" +
+                                            "- Force delete has been added for moderators.\n" +
                                             "- Use the `!changelog` command to view the latest changelog.\n" +
                                             "";
         public static readonly string FOOTER = "Make requests for future updates with `!request <idea>`";

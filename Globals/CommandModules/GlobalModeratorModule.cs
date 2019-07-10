@@ -81,7 +81,7 @@ namespace Globals.CommandModules
                     if (UserProfile.CanModerate(Context.User.Id, dbCon))
                     {
                         await Context.Message.DeleteAsync();
-                        await Message.DeleteAsync(User, dbCon);
+                        await Message.DeleteAsync(User, dbCon, true);
                         await UserProfile.AddWarningAsync(User, dbCon, true);
                         await Context.User.SendMessageAsync("You blacklisted " + User.Username + ".");
                     }

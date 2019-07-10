@@ -174,7 +174,7 @@ namespace Globals.Global
             cmd.Dispose();
         }
 
-        public static async Task DeleteAsync(IUser User, DBConnection dbCon)
+        public static async Task DeleteAsync(IUser User, DBConnection dbCon, bool force = false)
         {
             List<IMessage> MessagesToRemove = await GetMessagesByUserAsync(User, dbCon);
 
@@ -190,16 +190,19 @@ namespace Globals.Global
                             {
                                 if (embed != null)
                                 {
-                                    var emb = new EmbedBuilder() { Color = embed.Color};
-                                    emb.WithAuthor(embed.Author.Value.Name, embed.Author.Value.IconUrl, embed.Author.Value.Url);
-                                    emb.WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString());
-                                    await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb.Build());
+                                    if (force == true)
+                                    {
+                                        await MessagesToRemove[i].DeleteAsync();
+                                    }
+                                    else
+                                    {
+                                        var emb = new EmbedBuilder() { Color = embed.Color };
+                                        emb.WithAuthor(embed.Author.Value.Name, embed.Author.Value.IconUrl, embed.Author.Value.Url);
+                                        emb.WithFooter("Removed by moderator at " + DateTime.UtcNow.ToString());
+                                        await (MessagesToRemove[i] as IUserMessage).ModifyAsync(x => x.Embed = emb.Build());
+                                    }
 
                                     await Task.Delay(1100);
-                                }
-                                else
-                                {
-                                    Console.WriteLine("What happened?");
                                 }
                             }
                         }
