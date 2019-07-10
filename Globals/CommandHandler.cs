@@ -5,7 +5,6 @@ using Discord.WebSocket;
 using Discord;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using Globals.Data;
 using Globals.Global;
 using Globals.Util;

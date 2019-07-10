@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Globals.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,19 @@ namespace Globals.CommandModules
 {
     public class AboutModule : ModuleBase
     {
+        [Command("changelog")]
+        [Alias("update", "updatelog")]
+        public async Task ChangelogAsync()
+        {
+            await Context.Message.DeleteAsync();
+
+            EmbedBuilder embed = new EmbedBuilder() { };
+            embed.WithTitle("Global Chat " + References.Version + " - " + References.VersionDate);
+            embed.WithDescription(References.Changelog);
+            embed.WithColor(new Color(114, 137, 218));
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
+        }
+
         [Command("servers")]
         [Alias("allservers", "listservers", "serverlist", "guilds")]
         public async Task ServerListAsync()
